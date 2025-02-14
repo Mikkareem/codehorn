@@ -87,17 +87,11 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Start initializing terraform
-        run: cd ./terraform/local-cloud-deployment
-
       - name: Init terraform
-        run: ls -l && terraform init
+        run: cd ./terraform/local-cloud-deployment && terraform init
 
       - name: Validate Terraform
-        run: terraform validate
+        run: cd ./terraform/local-cloud-deployment && terraform validate
 
       - name: Apply Terraform
-        run: terraform apply -auto-approve
-
-      - name: Completed terraform apply
-        run: cd ../../
+        run: cd ./terraform/local-cloud-deployment && terraform apply -auto-approve

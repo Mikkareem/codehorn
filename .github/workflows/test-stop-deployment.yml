@@ -70,10 +70,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Init terraform
-        run: cd ./terraform/local-cloud-deployment && ls -l && terraform init && cd ../../
+        run: cd ./terraform/local-cloud-deployment && ls -l && terraform init
 
       - name: Destroy terraform
-        run: cd ./terraform/local-cloud-deployment && terraform destroy -auto-approve && cd ../../
+        run: cd ./terraform/local-cloud-deployment && terraform destroy -auto-approve
 
       - name: Delete backend for terraform in s3
         run: aws s3 rb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }} --force
