@@ -72,62 +72,62 @@ resource "aws_security_group" "service_sg" {
   }
 }
 
-
-resource "aws_iam_role" "ec2_s3_role" {
-  name = "EC2_S3_Access_Role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-  })
-}
-
-resource "aws_iam_policy_attachment" "s3_readonly_attachment" {
-  name       = "s3_readonly_attachment"
-  roles      = [aws_iam_role.ec2_s3_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
-
-resource "aws_iam_instance_profile" "ec2_s3_profile" {
-  name = "EC2_S3_Instance_Profile"
-  role = aws_iam_role.ec2_s3_role.name
-}
-
-resource "aws_instance" "aws_delivery_service_instance" {
-  ami = "ami-0c50b6f7dc3701ddd"
-  instance_type = "t3.micro"
-  key_name = var.key_pair_name
-
-  security_groups = [aws_security_group.allow_ssh.name, aws_security_group.service_sg.name]
-
-  iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name  # Attach IAM role
-
-  tags = {
-    Name = "JavaExecutionServiceInstance"
-  }
-
-  provisioner "remote-exec" {
-    connection {
-      type = "ssh"
-      host = self.public_ip
-      user = "ec2-user"
-      private_key = file("${var.key_pair_name}.pem")
-    }
-
-    inline = [
-      "echo 'Setup of Java Execution Service, Starting....'",
-      "sudo yum update -y",
-      "sudo yum install -y java-17-amazon-corretto",
-      "cd /home/ec2-user",
-      "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service-${var.app-version}.jar app.jar",
-      "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
-      "echo 'Setup of Java Execution Service, Stopped'",
-    ]
-  }
-}
+#
+# resource "aws_iam_role" "ec2_s3_role" {
+#   name = "EC2_S3_Access_Role"
+#
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Action = "sts:AssumeRole"
+#       Effect = "Allow"
+#       Principal = {
+#         Service = "ec2.amazonaws.com"
+#       }
+#     }]
+#   })
+# }
+#
+# resource "aws_iam_policy_attachment" "s3_readonly_attachment" {
+#   name       = "s3_readonly_attachment"
+#   roles      = [aws_iam_role.ec2_s3_role.name]
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+# }
+#
+# resource "aws_iam_instance_profile" "ec2_s3_profile" {
+#   name = "EC2_S3_Instance_Profile"
+#   role = aws_iam_role.ec2_s3_role.name
+# }
+#
+# resource "aws_instance" "aws_delivery_service_instance" {
+#   ami = "ami-0c50b6f7dc3701ddd"
+#   instance_type = "t3.micro"
+#   key_name = var.key_pair_name
+#
+#   security_groups = [aws_security_group.allow_ssh.name, aws_security_group.service_sg.name]
+#
+#   iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name  # Attach IAM role
+#
+#   tags = {
+#     Name = "JavaExecutionServiceInstance"
+#   }
+#
+#   provisioner "remote-exec" {
+#     connection {
+#       type = "ssh"
+#       host = self.public_ip
+#       user = "ec2-user"
+#       private_key = file("${var.key_pair_name}.pem")
+#     }
+#
+#     inline = [
+#       "echo 'Setup of Java Execution Service, Starting....'",
+#       "sudo yum update -y",
+#       "sudo yum install -y java-17-amazon-corretto",
+#       "cd /home/ec2-user",
+#       "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service-${var.app-version}.jar app.jar",
+#       "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
+#       "echo 'Setup of Java Execution Service, Stopped'",
+#     ]
+#   }
+# }

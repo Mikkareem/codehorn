@@ -71,4 +71,24 @@ jobs:
           for jar in java-execution-service; do
             aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
-      
+
+      - name: Create backend for terraform in s3
+        run: aws s3 mb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Start initializing terraform
+        run: cd ./terraform/local-cloud-deployment
+
+      - name: Init terraform
+        run: terraform init
+
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+
+      - name: Completed terraform apply
+        run: cd ../../

@@ -14,10 +14,16 @@ jobs:
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: 'local-test'
+      - name: Setup AWS CLI
+        run: |
+          sudo apt-get update -y
+          aws --version
+          aws configure set aws_access_key_id ${{ secrets.AWS_NAJIMA_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_NAJIMA_REGION }}
+
+      - name: Delete backend for terraform in s3
+        run: aws s3 rb s3://${{ secrets.TEMP_S3_BUCKET }} --force
 
   destroy-terraform:
     if: github.event.workflow_run.conclusion == 'failure' || github.event_name == 'workflow_dispatch'
@@ -60,14 +66,14 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_NAJIMA_REGION }}
 
-      - name: Create backend for terraform in s3
-        run: aws s3 mb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Init terraform
         run: cd ./terraform/local-cloud-deployment && terraform init && cd ../../
+
+      - name: Destroy terraform
+        run: cd ./terraform/local-cloud-deployment && terraform destroy -auto-approve && cd ../../
 
       - name: Delete backend for terraform in s3
         run: aws s3 rb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }} --force
