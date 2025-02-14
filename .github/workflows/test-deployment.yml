@@ -2,11 +2,6 @@ name: Start Test Deployment
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: "Branch to run the workflow"
-        required: true
-        default: "local-test"
 
 
 jobs:
