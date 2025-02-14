@@ -48,7 +48,7 @@ jobs:
              }
              backend "s3" {
                bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
-               key     = "terraform/state.tfstate"
+               key     = "terraform/terraform.tfstate"
                region  = "${{ secrets.AWS_NAJIMA_REGION }}"
                encrypt = true
              }
@@ -70,7 +70,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Init terraform
-        run: cd ./terraform/local-cloud-deployment && terraform init && cd ../../
+        run: cd ./terraform/local-cloud-deployment && ls -l && terraform init && cd ../../
 
       - name: Destroy terraform
         run: cd ./terraform/local-cloud-deployment && terraform destroy -auto-approve && cd ../../

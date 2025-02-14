@@ -41,7 +41,7 @@ jobs:
              }
              backend "s3" {
                bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
-               key     = "terraform/state.tfstate"
+               key     = "terraform/terraform.tfstate"
                region  = "${{ secrets.AWS_NAJIMA_REGION }}"
                encrypt = true
              }
@@ -91,7 +91,7 @@ jobs:
         run: cd ./terraform/local-cloud-deployment
 
       - name: Init terraform
-        run: terraform init
+        run: ls -l && terraform init
 
       - name: Validate Terraform
         run: terraform validate
