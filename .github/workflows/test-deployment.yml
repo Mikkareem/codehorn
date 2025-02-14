@@ -2,6 +2,11 @@ name: Start Test Deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to run the workflow"
+        required: true
+        default: "local-test"
 
 
 jobs:
@@ -40,7 +45,7 @@ jobs:
       - name: Setup AWS CLI
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y awscli
+          aws --version
           aws configure set aws_access_key_id ${{ secrets.AWS_NAJIMA_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_NAJIMA_REGION }}
@@ -54,5 +59,5 @@ jobs:
       - name: Upload JARs to S3
         run: |
           for jar in java-execution-service; do
-            aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.S3_BUCKET }}/$jar.jar
+            aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
