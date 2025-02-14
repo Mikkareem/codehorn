@@ -1,13 +1,13 @@
-terraform {
-  required_version = ">= 1.0.0" # Ensure that the Terraform version is 1.0.0 or higher
-
-  required_providers {
-    aws = {
-      source = "hashicorp/aws" # Specify the source of the AWS provider
-      version = "~> 4.0"        # Use a version of the AWS provider that is compatible with version
-    }
-  }
-}
+# terraform {
+#   required_version = ">= 1.0.0" # Ensure that the Terraform version is 1.0.0 or higher
+#
+#   required_providers {
+#     aws = {
+#       source = "hashicorp/aws" # Specify the source of the AWS provider
+#       version = "~> 4.0"        # Use a version of the AWS provider that is compatible with version
+#     }
+#   }
+# }
 
 provider "aws" {
   region = "ap-south-1"
@@ -16,6 +16,16 @@ provider "aws" {
 variable "key_pair_name" {
   type = string
   default = "NajimaBanuKeyPair"
+}
+
+variable "sources-bucket-name" {
+  type = string
+  default = "temp-sources-for-codehorn"
+}
+
+variable "app-version" {
+  type = string
+  default = "1.0.0"
 }
 
 resource "aws_security_group" "allow_ssh" {
@@ -98,14 +108,8 @@ resource "aws_instance" "aws_delivery_service_instance" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name  # Attach IAM role
 
-  # user_data = <<-EOF
-  #   #!/bin/bash
-  #   sudo yum update -y
-  #   sudo yum install -y java-17-openjdk
-  # EOF
-
   tags = {
-    Name = "DeliveryServiceInstance" # Tag the instance with a Name tag for easier identification
+    Name = "JavaExecutionServiceInstance"
   }
 
   provisioner "remote-exec" {
@@ -113,32 +117,17 @@ resource "aws_instance" "aws_delivery_service_instance" {
       type = "ssh"
       host = self.public_ip
       user = "ec2-user"
-      private_key = file("~/DEV/subordinates/SSHKeys/${var.key_pair_name}.pem")
+      private_key = file("${var.key_pair_name}.pem")
     }
 
     inline = [
-      "echo 'Setup of Delivery Service, Starting....'",
+      "echo 'Setup of Java Execution Service, Starting....'",
       "sudo yum update -y",
-      "sudo yum install -y java-17-amazon-corretto-devel",
+      "sudo yum install -y java-17-amazon-corretto",
       "cd /home/ec2-user",
-      "export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64",
-      "echo $JAVA_HOME",
-      "aws s3 cp s3://temp-for-s3/project project --recursive",
-      "cd project",
-      "cat <<EOF > ./gradle/wrapper/gradle-wrapper.properties",
-      "distributionBase=GRADLE_USER_HOME",
-      "distributionPath=wrapper/dists",
-      "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11-bin.zip",
-      "networkTimeout=10000",
-      "validateDistributionUrl=true",
-      "zipStoreBase=GRADLE_USER_HOME",
-      "zipStorePath=wrapper/dists",
-      "EOF",
-      "cat ./gradle/wrapper/gradle-wrapper.properties",
-      "chmod +x gradlew",
-      "./gradlew build",
-      # "nohup java -jar /home/ec2-user/project/delivery-1.0.0.jar > /home/ec2-user/app.log 2>&1 &",
-      "echo 'Setup of Delivery Service, Stopped'",
+      "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service-${var.app-version}.jar app.jar",
+      "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
+      "echo 'Setup of Java Execution Service, Stopped'",
     ]
   }
 }

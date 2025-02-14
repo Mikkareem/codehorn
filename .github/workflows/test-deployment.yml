@@ -3,7 +3,6 @@ name: Start Test Deployment
 on:
   workflow_dispatch:
 
-
 jobs:
   upload:
     runs-on: ubuntu-latest
@@ -27,6 +26,21 @@ jobs:
 
       - name: Verify Gradle-wrapper Properties Update
         run: cat ./gradle/wrapper/gradle-wrapper.properties
+
+      - name: Change Backend of Terraform
+        run: |
+          touch ./terraform/local-cloud-deployment/backend.tf
+          cat <<EOF > ./terraform/local-cloud-deployment/backend.tf
+          terraform {
+             bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
+             key     = "terraform/state.tfstate"
+             region  = "${{ secrets.AWS_NAJIMA_REGION }}"
+             encrypt = true
+          }
+          EOF
+
+      - name: Verify Backend of Terraform Update
+        run: cat ./terraform/local-cloud-deployment/backend.tf
 
       - name: Setup JDK
         uses: actions/setup-java@v3
@@ -57,3 +71,4 @@ jobs:
           for jar in java-execution-service; do
             aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
+      

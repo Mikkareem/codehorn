@@ -1,0 +1,50 @@
+name: Stop Test Deployment
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Start Test Deployment"]
+    types:
+      - completed
+
+jobs:
+  delete-sources:
+    if: >
+      (github.event_name == 'workflow_dispatch') || 
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'local-test'
+
+  destroy-terraform:
+    if: github.event.workflow_run.conclusion == 'failure' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'local-test'
+
+      - name: Change Backend of Terraform
+        run: |
+          touch ./terraform/local-cloud-deployment/backend.tf
+          cat <<EOF > ./terraform/local-cloud-deployment/backend.tf
+          terraform {
+             bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
+             key     = "terraform/state.tfstate"
+             region  = "${{ secrets.AWS_NAJIMA_REGION }}"
+             encrypt = true
+          }
+          EOF
+
+      - name: Verify Backend of Terraform Update
+        run: cat ./terraform/local-cloud-deployment/backend.tf
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Init terraform
+        run: cd ./terraform/local-cloud-deployment && terraform init && cd ../../
