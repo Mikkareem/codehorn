@@ -33,10 +33,19 @@ jobs:
           touch ./terraform/local-cloud-deployment/backend.tf
           cat <<EOF > ./terraform/local-cloud-deployment/backend.tf
           terraform {
-             bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
-             key     = "terraform/state.tfstate"
-             region  = "${{ secrets.AWS_NAJIMA_REGION }}"
-             encrypt = true
+             required_version = ">= 1.0.0"
+             required_providers {
+               aws = {
+                 source = "hashicorp/aws"
+                 version = "~> 4.0"
+               }
+             }
+             backend "s3" {
+               bucket  = "${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}"
+               key     = "terraform/state.tfstate"
+               region  = "${{ secrets.AWS_NAJIMA_REGION }}"
+               encrypt = true
+             }
           }
           EOF
 
