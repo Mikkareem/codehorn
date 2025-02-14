@@ -52,6 +52,13 @@ jobs:
       - name: Verify Backend of Terraform Update
         run: cat ./terraform/local-cloud-deployment/backend.tf
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_NAJIMA_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_NAJIMA_REGION }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
