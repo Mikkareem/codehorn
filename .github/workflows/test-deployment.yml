@@ -1,0 +1,57 @@
+name: Start Test Deployment
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'local-test'
+
+      - name: Change Gradle-wrapper Properties
+        run: |
+          cat <<EOF > ./gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dist
+          EOF
+
+      - name: Verify Gradle-wrapper Properties Update
+        run: cat ./gradle/wrapper/gradle-wrapper.properties
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build All Services
+        run: ./gradlew clean build -x test
+
+      - name: Setup AWS CLI
+        run: |
+          sudo apt-get install -y awscli
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+
+#      - name: Upload JARs to S3
+#        run: |
+#          for jar in service1 service2 service3 service4; do
+#            aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.S3_BUCKET }}/$jar.jar
+#          done
+
+      - name: Upload JARs to S3
+        run: |
+          for jar in java-execution-service; do
+            aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.S3_BUCKET }}/$jar.jar
+          done
