@@ -35,7 +35,7 @@ class JavaExecutionController {
                 testcases = request.sampleTestcases.map { it.toProblemTestcase() }
             ).toMutableList()
 
-            if(outputs.any { it.result != CodeSubmissionResult.Accepted } && request.hiddenTestcases.isNotEmpty()) {
+            if(outputs.all { it.result == CodeSubmissionResult.Accepted } && request.hiddenTestcases.isNotEmpty()) {
                 outputs += codeExecutionService.executeFor(
                     folder = it.file,
                     fileContent = request.fileContent,
