@@ -12,11 +12,6 @@ variable "sources-bucket-name" {
   default = "temp-sources-for-codehorn"
 }
 
-variable "app-version" {
-  type = string
-  default = "1.0.0"
-}
-
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH access"
@@ -166,7 +161,7 @@ resource "aws_instance" "aws_java_exec_service_instance" {
       "sudo yum install -y java-17-amazon-corretto",
       "cd /home/ec2-user",
       "touch app.log",
-      "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service-${var.app-version}.jar app.jar",
+      "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service.jar app.jar",
       "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
       "echo 'Setup of Java Execution Service, Stopped'",
     ]
