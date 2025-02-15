@@ -7,3 +7,11 @@ object TestcaseType {
     const val LIST_TYPE = 1L shl 18
     const val LIST_LIST_TYPE = 1L shl 20
 }
+
+enum class TestcaseInputType {
+    STRING, NON_STRING
+}
+
+enum class TestcaseInputCollectionType {
+    LIST, LIST_LIST, SINGLE
+}

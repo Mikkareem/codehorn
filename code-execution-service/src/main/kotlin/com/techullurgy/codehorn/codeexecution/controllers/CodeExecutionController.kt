@@ -1,6 +1,5 @@
 package com.techullurgy.codehorn.codeexecution.controllers
 
-import com.techullurgy.codehorn.common.dto.TestcaseDTO
 import com.techullurgy.codehorn.common.requests.CodeExecutionRequest
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,14 +25,14 @@ class CodeExecutionController {
                     submissionId = "9a0s9das9",
                     fileContent = "JAVA_CODE_HERE",
                     sampleTestcases = listOf(
-                        TestcaseDTO("190"),
-                        TestcaseDTO("39"),
-                        TestcaseDTO("46"),
+//                        TestcaseDTO("190"),
+//                        TestcaseDTO("39"),
+//                        TestcaseDTO("46"),
                     ),
                     hiddenTestcases = listOf(
-                        TestcaseDTO("9"),
-                        TestcaseDTO("61"),
-                        TestcaseDTO("65"),
+//                        TestcaseDTO("9"),
+//                        TestcaseDTO("61"),
+//                        TestcaseDTO("65"),
                     ),
                 )
             )

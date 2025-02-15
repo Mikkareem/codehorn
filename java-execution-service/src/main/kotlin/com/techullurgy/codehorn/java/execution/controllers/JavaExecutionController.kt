@@ -1,10 +1,12 @@
 package com.techullurgy.codehorn.java.execution.controllers
 
-import com.techullurgy.codehorn.common.model.ProblemTestcase
-import com.techullurgy.codehorn.common.model.TestcaseType
+import com.techullurgy.codehorn.common.mappers.toProblemTestcase
+import com.techullurgy.codehorn.common.model.CodeSubmissionResult
+import com.techullurgy.codehorn.common.model.TestcaseResult
 import com.techullurgy.codehorn.common.requests.CodeExecutionRequest
 import com.techullurgy.codehorn.domain.code.execution.services.CodeExecutionService
 import com.techullurgy.codehorn.domain.code.execution.services.CodeExecutionType
+import com.techullurgy.codehorn.domain.code.execution.services.UserFileCreator
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -20,28 +22,31 @@ class JavaExecutionController {
     @Autowired
     private lateinit var codeExecutionServiceProvider: ObjectProvider<CodeExecutionService>
 
-    // TODO: Can we make it GET request with body
-    @PostMapping()
-    fun executeJavaCode(@RequestBody executionRequest: CodeExecutionRequest): ResponseEntity<String> {
+    @PostMapping
+    fun executeJavaCode(@RequestBody request: CodeExecutionRequest): ResponseEntity<List<TestcaseResult>> {
 
-        val codeExecutionService = codeExecutionServiceProvider.getObject(executionRequest.submissionId)
+        val codeExecutionService = codeExecutionServiceProvider.getObject(request.submissionId)
 
-        codeExecutionService.executeFor(
-            fileContent = executionRequest.fileContent,
-            executionType = CodeExecutionType.STOP_IF_FAILS,
-            testcases = listOf(
-                ProblemTestcase(
-                    id = 1,
-                    isHidden = true,
-                    input = executionRequest.sampleTestcases.map { it.input } + executionRequest.hiddenTestcases.map { it.input },
-                    masks = listOf(
-                        TestcaseType.SINGLE_TYPE or TestcaseType.NON_STRING_TYPE,
-                        TestcaseType.SINGLE_TYPE or TestcaseType.NON_STRING_TYPE
-                    )
+        val results = UserFileCreator(request.submissionId, "java").use {
+            val outputs = codeExecutionService.executeFor(
+                folder = it.file,
+                fileContent = request.fileContent,
+                executionType = CodeExecutionType.CONTINUE_IF_FAILS,
+                testcases = request.sampleTestcases.map { it.toProblemTestcase() }
+            ).toMutableList()
+
+            if(outputs.any { it.result != CodeSubmissionResult.Accepted } && request.hiddenTestcases.isNotEmpty()) {
+                outputs += codeExecutionService.executeFor(
+                    folder = it.file,
+                    fileContent = request.fileContent,
+                    executionType = CodeExecutionType.STOP_IF_FAILS,
+                    testcases = request.hiddenTestcases.map { it.toProblemTestcase() }
                 )
-            )
-        )
+            }
 
-        return ResponseEntity.ok("Success")
+            outputs.toList()
+        }
+
+        return ResponseEntity.ok(results)
     }
 }

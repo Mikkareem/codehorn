@@ -1,10 +1,12 @@
 package com.techullurgy.codehorn.domain.code.execution.services
 
 import com.techullurgy.codehorn.common.model.ProblemTestcase
+import com.techullurgy.codehorn.common.model.TestcaseResult
 import com.techullurgy.codehorn.domain.code.execution.usecases.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+import java.io.File
 
 @Component
 @Scope("prototype")
@@ -18,12 +20,14 @@ class CodeExecutionService(
     @Autowired private lateinit var generateInputFileUseCase: GenerateInputFileUseCase
     @Autowired private lateinit var deleteDockerImageUseCase: DeleteDockerImageUseCase
     @Autowired private lateinit var deleteDockerFileUseCase: DeleteDockerFileUseCase
+    @Autowired private lateinit var generateTestcaseResultsUseCase: GenerateTestcaseResultsUseCase
 
     fun executeFor(
+        folder: File,
         fileContent: String,
         testcases: List<ProblemTestcase>,
         executionType: CodeExecutionType
-    ): List<CodeExecutionResult> {
+    ): List<TestcaseResult> {
         generateInputFileUseCase(submissionId, fileContent)
 
         createNecessaryTestcaseFilesUseCase(submissionId, testcases)
@@ -43,6 +47,6 @@ class CodeExecutionService(
 
         deleteDockerFileUseCase(submissionId)
 
-        return results
+        return generateTestcaseResultsUseCase(folder, testcases, results)
     }
 }
