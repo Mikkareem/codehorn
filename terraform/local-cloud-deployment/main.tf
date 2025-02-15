@@ -163,6 +163,7 @@ resource "aws_instance" "aws_java_exec_service_instance" {
       "touch app.log",
       "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service.jar app.jar",
       "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
+      "sleep 10",
       "echo 'Setup of Java Execution Service, Stopped'",
     ]
   }
