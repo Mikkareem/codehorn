@@ -22,7 +22,7 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_NAJIMA_REGION }}
 
-      - name: Delete backend for terraform in s3
+      - name: Delete sources from s3
         run: aws s3 rb s3://${{ secrets.TEMP_S3_BUCKET }} --force
 
   destroy-terraform:

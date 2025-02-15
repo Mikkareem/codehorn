@@ -68,6 +68,11 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_NAJIMA_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_NAJIMA_REGION }}
 
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.AWS_KEY_PAIR_SSH }}" > NajimaBanuKeyPair.pem
+          chmod 600 NajimaBanuKeyPair.pem
+
 #      - name: Upload JARs to S3
 #        run: |
 #          for jar in service1 service2 service3 service4; do
