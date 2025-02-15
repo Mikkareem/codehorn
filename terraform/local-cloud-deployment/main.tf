@@ -161,7 +161,7 @@ resource "aws_instance" "aws_java_exec_service_instance" {
 
     inline = [
       "echo 'Setup of Java Execution Service, Starting....'",
-      "echo Consul Host: \\${CODEHORN_CONSUL_HOST}",
+      "echo Consul Host: $CODEHORN_CONSUL_HOST",
       "sudo yum update -y",
       "sudo yum install -y java-17-amazon-corretto",
       "cd /home/ec2-user",
