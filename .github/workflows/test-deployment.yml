@@ -88,10 +88,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Init terraform
-        run: cd ./terraform/local-cloud-deployment && terraform init
+        run: terraform init
+        working-directory: terraform/local-cloud-deployment
 
       - name: Validate Terraform
-        run: cd ./terraform/local-cloud-deployment && terraform validate
+        run: terraform validate
+        working-directory: terraform/local-cloud-deployment
 
       - name: Apply Terraform
-        run: cd ./terraform/local-cloud-deployment && terraform apply -auto-approve
+        run: terraform apply -auto-approve
+        working-directory: terraform/local-cloud-deployment
