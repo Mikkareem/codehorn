@@ -72,6 +72,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_KEY_PAIR_SSH }}" > NajimaBanuKeyPair.pem
           chmod 600 NajimaBanuKeyPair.pem
+        working-directory: terraform/local-cloud-deployment
 
 #      - name: Upload JARs to S3
 #        run: |
