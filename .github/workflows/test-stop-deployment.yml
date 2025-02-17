@@ -54,9 +54,11 @@ jobs:
              }
           }
           EOF
+        working-directory: backend
 
       - name: Verify Backend of Terraform Update
         run: cat ./terraform/local-cloud-deployment/backend.tf
+        working-directory: backend
 
       - name: Setup AWS CLI
         run: |
@@ -71,11 +73,11 @@ jobs:
 
       - name: Init terraform
         run: terraform init
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
 
       - name: Destroy terraform
         run: terraform destroy -auto-approve
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
 
       - name: Delete backend for terraform in s3
         run: aws s3 rb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }} --force

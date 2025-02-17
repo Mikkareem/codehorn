@@ -23,9 +23,11 @@ jobs:
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dist
           EOF
+        working-directory: backend
 
       - name: Verify Gradle-wrapper Properties Update
         run: cat ./gradle/wrapper/gradle-wrapper.properties
+        working-directory: backend
 
       - name: Change Backend of Terraform
         run: |
@@ -47,9 +49,11 @@ jobs:
              }
           }
           EOF
+        working-directory: backend
 
       - name: Verify Backend of Terraform Update
         run: cat ./terraform/local-cloud-deployment/backend.tf
+        working-directory: backend
 
       - name: Setup JDK
         uses: actions/setup-java@v3
@@ -59,6 +63,7 @@ jobs:
 
       - name: Build All Services
         run: ./gradlew clean build -x test
+        working-directory: backend
 
       - name: Setup AWS CLI
         run: |
@@ -72,7 +77,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_KEY_PAIR_SSH }}" > NajimaBanuKeyPair.pem
           chmod 600 NajimaBanuKeyPair.pem
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
 
 #      - name: Upload JARs to S3
 #        run: |
@@ -86,6 +91,7 @@ jobs:
           for jar in java-execution-service; do
             aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
+        working-directory: backend
 
       - name: Create backend for terraform in s3
         run: aws s3 mb s3://${{ secrets.TEMP_TERRAFORM_STATE_BUCKET }}
@@ -95,12 +101,12 @@ jobs:
 
       - name: Init terraform
         run: terraform init
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
 
       - name: Validate Terraform
         run: terraform validate
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
 
       - name: Apply Terraform
         run: terraform apply -auto-approve
-        working-directory: terraform/local-cloud-deployment
+        working-directory: backend/terraform/local-cloud-deployment
