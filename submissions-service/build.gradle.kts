@@ -1,5 +1,16 @@
-import org.springframework.boot.gradle.tasks.bundling.BootJar
+plugins {
+    kotlin("plugin.jpa")
+}
 
-tasks.withType<BootJar> {
-    mainClass.set("com.techullurgy.codehorn.submissions.CodeHornSubmissionsApplication")
+dependencies {
+    implementation(project(":common"))
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("com.h2database:h2")
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }

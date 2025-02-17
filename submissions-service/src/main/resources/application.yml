@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: SUBMISSIONS_SERVICE
+
+  consul:
+    host: ${CODEHORN_CONSUL_HOST:localhost}
+    port: 8500
