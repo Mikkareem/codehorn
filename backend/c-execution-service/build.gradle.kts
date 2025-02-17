@@ -1,5 +1,3 @@
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-
-tasks.withType<BootJar> {
-    mainClass.set("com.techullurgy.codehorn.c.execution.CodeHornCExecutionApplication")
+dependencies {
+    implementation(project(":code-execution-domain"))
 }
