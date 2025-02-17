@@ -41,3 +41,11 @@ out/
 
 ### Terraform  ###
 .terraform
+
+### React ###
+build
+dist
+target
+node_modules
+.vite
+
