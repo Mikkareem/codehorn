@@ -1,0 +1,9 @@
+spring:
+#  security:
+#    user:
+#      name: 'Irsath'
+#      password: '1234'
+
+  cloud:
+    consul:
+      enabled: false
