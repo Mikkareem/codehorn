@@ -14,7 +14,7 @@ const NavigationLayout = ({ children }) => {
 
     return (
         <div>
-            <div className='h-16 flex items-center bg-muted'>
+            <div className='h-16 flex items-center bg-muted fixed top-0 left-0 w-full z-10'>
                 <div className='max-w-[90%] mx-auto w-full'>
                     {navLinks.map(link => {
                         const isActive = pathname.startsWith(link.href)

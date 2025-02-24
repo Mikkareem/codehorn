@@ -5,11 +5,11 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {Button} from "@/components/ui/button";
 import {useTheme} from "next-themes";
 
-const ThemeToggle = () => {
+const ThemeToggle = ({ className }) => {
     const { setTheme } = useTheme();
 
     return (
-        <div className='absolute top-3 right-3'>
+        <div className={className}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon">

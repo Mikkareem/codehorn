@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         >
             <div className="bg-body-background min-h-screen font-inter">
                 {children}
-                <ThemeToggle />
+                <ThemeToggle className='fixed top-3 right-3 z-50'/>
             </div>
         </ThemeProvider>
       </body>
