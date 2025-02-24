@@ -28,7 +28,7 @@ const NavigationLayout = ({ children }) => {
                     })}
                 </div>
             </div>
-            <div className='max-w-[90%] mx-auto'>
+            <div className='max-w-[90%] mx-auto mt-16'>
                 {children}
             </div>
         </div>
