@@ -51,7 +51,7 @@ const ProblemsSetTable = async ({ filters }) => {
                         <TableHead>Status</TableHead>
                         <TableHead>Problem Title</TableHead>
                         <TableHead>Difficulty</TableHead>
-                        <TableHead>Testcases</TableHead>
+                        <TableHead>Acceptance</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -72,12 +72,13 @@ const ProblemsSetTable = async ({ filters }) => {
                                 className={`${problem.difficulty === 'Easy' ? 'text-green-500' : problem.difficulty === 'Medium' ? 'text-orange-500' : 'text-red-500'}`}
                             >{problem.difficulty}</TableCell>
                             <TableCell>
-                                <Link href={`/problems/crud/${problem.problemNo}/testcases`}>
-                                    <StickyNote size={20}/>
-                                </Link>
+
                             </TableCell>
                             <TableCell>
                                 <div className='flex'>
+                                    <Link href={`/problems/crud/${problem.problemNo}/testcases`}>
+                                        <StickyNote size={20}/>
+                                    </Link>
                                     <Link href={`/problems/crud?pid=${problem.problemNo}`}>
                                         <Pencil size={20}/>
                                     </Link>
