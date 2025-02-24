@@ -1,13 +1,10 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import {Inter} from "next/font/google";
 import "./globals.css";
+import {ThemeProvider} from "@/components/utils/ThemeProvider";
+import ThemeToggle from "@/components/utils/ThemeToggle";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-family-inter",
   subsets: ["latin"],
 });
 
@@ -18,12 +15,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} antialiased`}
       >
-        <h1>Root Layout</h1>
-        {children}
+        <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTrasitionOnChange
+        >
+            <div className="bg-body-background min-h-screen font-inter">
+                {children}
+                <ThemeToggle />
+            </div>
+        </ThemeProvider>
       </body>
     </html>
   );

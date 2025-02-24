@@ -1,3 +1,5 @@
+'use client'
+
 import {useCanvas} from "@/components/utils/hooks/use-canvas";
 
 const Canvas = (props) => {

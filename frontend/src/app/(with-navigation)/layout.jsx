@@ -13,21 +13,25 @@ const NavigationLayout = ({ children }) => {
     const pathname = usePathname()
 
     return (
-        <>
-            <div>
-                {navLinks.map(link => {
-                    const isActive = pathname.startsWith(link.href)
-                    return <Link
-                        key={link.name}
-                        href={link.href}
-                        className={`mr-3 ${isActive ? 'font-bold': 'text-blue-500'}`}
-                    >
-                        {link.name}
-                    </Link>
-                })}
+        <div>
+            <div className='h-16 flex items-center bg-muted'>
+                <div className='max-w-[90%] mx-auto w-full'>
+                    {navLinks.map(link => {
+                        const isActive = pathname.startsWith(link.href)
+                        return <Link
+                            key={link.name}
+                            href={link.href}
+                            className={`mr-3 ${isActive ? 'font-bold': 'text-muted-foreground'}`}
+                        >
+                            {link.name}
+                        </Link>
+                    })}
+                </div>
             </div>
-            {children}
-        </>
+            <div className='max-w-[90%] mx-auto'>
+                {children}
+            </div>
+        </div>
     );
 };
 
