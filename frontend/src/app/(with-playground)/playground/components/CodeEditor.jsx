@@ -13,11 +13,11 @@ import {fetchCodeSnippet} from "@/actions/PlaygroundActions";
 export default function CodeEditor() {
     const { state: { code, language }, dispatch } = usePlaygroundContext()
 
-    useSuspenseQuery({
-        queryKey: ['editor', language],
-        queryFn: () => fetchCodeSnippet(language, (data) => dispatch({ type: 'setCode', payload: data.snippet })),
-        refetchOnMount: false,
-    })
+    // useSuspenseQuery({
+    //     queryKey: ['editor', language],
+    //     queryFn: () => fetchCodeSnippet(language, (data) => dispatch({ type: 'setCode', payload: data.snippet })),
+    //     refetchOnMount: false,
+    // })
 
     const extensions = language === 'c' ? [StreamLanguage.define(c)]
         : language === 'cpp' ? [StreamLanguage.define(cpp)]

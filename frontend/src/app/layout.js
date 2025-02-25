@@ -2,6 +2,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import {ThemeProvider} from "@/components/utils/ThemeProvider";
 import ThemeToggle from "@/components/utils/ThemeToggle";
+import QueryClientProvider from "@/components/utils/QueryClientProvider";
 
 const inter = Inter({
   variable: "--font-family-inter",
@@ -25,10 +26,12 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTrasitionOnChange
         >
-            <div className="bg-body-background min-h-screen font-inter">
-                {children}
-                <ThemeToggle className='fixed top-3 right-3 z-50'/>
-            </div>
+            <QueryClientProvider>
+                <div className="bg-body-background min-h-screen font-inter">
+                    {children}
+                    <ThemeToggle className='fixed top-3 right-3 z-50'/>
+                </div>
+            </QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>
