@@ -6,10 +6,10 @@ import {Settings} from "lucide-react";
 
 export default () => (
     <div className="h-[100%] flex flex-col gap-2">
-        <div className='flex justify-between'>
-            <LanguageSelector className='self-start'/>
+        <div className='flex justify-between items-center'>
+            <LanguageSelector />
             <div className='flex gap-3 items-center'>
-                <Settings size={20} />
+                <Settings size={16} />
                 <CodeButtons />
             </div>
         </div>

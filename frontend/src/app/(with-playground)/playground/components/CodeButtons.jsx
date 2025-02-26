@@ -29,13 +29,14 @@ export default function CodeButtons() {
 
     return <div className="flex gap-3">
         <Button
-            className="bg-green-700 hover:bg-green-900 text-white"
+            className="bg-green-700 hover:bg-green-900 text-white h-7"
             onClick={() => run(code)}
         >
             {runPending ? 'Running' : 'Run'}
         </Button>
         <Button
             onClick={() => submit(code)}
+            className="h-7"
         >
             {submitPending ? 'Submitting' : 'Submit'}
         </Button>

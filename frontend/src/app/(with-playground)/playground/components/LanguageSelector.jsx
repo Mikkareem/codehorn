@@ -9,7 +9,7 @@ const LanguageSelector = ({ className }) => {
     return (
         <div className={className}>
             <Select value={language} onValueChange={value => dispatch({ type: 'changeLanguage', payload: value })}>
-                <SelectTrigger className='outline-none border-none'>
+                <SelectTrigger className='outline-none border-none focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0 h-6'>
                     <SelectValue placeholder='Select Language' />
                 </SelectTrigger>
                 <SelectContent>

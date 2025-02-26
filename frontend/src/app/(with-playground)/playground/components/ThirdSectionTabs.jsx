@@ -5,17 +5,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TestResults from "./TestResults"
 import Testcases from "./Testcases"
 
-export default ({ className }) => {
+export default ({ className, collapsed }) => {
     const { state: { selectedThirdSectionTab, thirdSectionTabs }, dispatch } = usePlaygroundContext()
 
+    const tabsListCollapseRelatedClasses = `${collapsed ? 'rotate-90 origin-[0_36px] mt-[-36px]' : ''}`
+
     return <Tabs value={selectedThirdSectionTab.type} onValueChange={(value)=>{ dispatch({ type: 'thirdSectionTabChange', payload: value }) }} className={className}>
-        <TabsList className="justify-start w-max">
+        <TabsList className={`justify-start w-max ${tabsListCollapseRelatedClasses}`}>
             {thirdSectionTabs.map((tab)=>(
                 <TabsTrigger key={tab.type} value={tab.type}>{tab.title}</TabsTrigger>
             ))}
         </TabsList>
         {
-            thirdSectionTabs.map(tab => (
+            !collapsed ? thirdSectionTabs.map(tab => (
                 <TabsContent key={tab.type} value={tab.type} className="flex-grow overflow-auto">
                     {
                         (()=>{
@@ -28,7 +30,7 @@ export default ({ className }) => {
                         })()
                     }
                 </TabsContent>
-            ))
+            )) : null
         }
     </Tabs>
 }

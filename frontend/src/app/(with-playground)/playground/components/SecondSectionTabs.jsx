@@ -3,8 +3,9 @@
 import { usePlaygroundContext } from "@/contexts/playground"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CodeSection from "./CodeSection"
+import {Maximize, Minimize} from "lucide-react";
 
-export default ({ className, toggler }) => {
+export default ({ className, toggler, inExpandedMode }) => {
     const { state: { selectedSecondSectionTab, secondSectionTabs }, dispatch } = usePlaygroundContext()
 
     return <Tabs
@@ -12,7 +13,7 @@ export default ({ className, toggler }) => {
         onValueChange={(value)=>{ dispatch({ type: 'secondSectionTabChange', payload: value}) }}
         className={className}
     >
-        <div className='justify-between flex w-full'>
+        <div className='justify-between flex w-full items-center'>
             <TabsList className="w-max">
                 {secondSectionTabs.map((tab)=>(
                     <TabsTrigger key={tab.type} value={tab.type}>{tab.title}</TabsTrigger>
@@ -21,7 +22,10 @@ export default ({ className, toggler }) => {
             <div>
                 <button
                     onClick={() => { toggler() }}
-                >Toggle</button>
+                    className='text-muted-foreground'
+                >
+                    {inExpandedMode ? (<Maximize size={20} />) : (<Minimize size={20}/>)}
+                </button>
             </div>
         </div>
         {

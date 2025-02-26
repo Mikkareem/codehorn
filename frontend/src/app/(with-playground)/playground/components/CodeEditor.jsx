@@ -34,7 +34,7 @@ export default function CodeEditor() {
                 tabSize: 2,
             }}
             onChange={value => dispatch({ type: 'setCode', payload: value })}
-            className='flex-grow overflow-y-auto border border-white rounded-xl'
+            className='flex-grow overflow-y-auto rounded-xl'
             height='100%'
         />
     )
