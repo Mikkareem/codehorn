@@ -17,3 +17,8 @@ object EndpointConstants {
         }
     }
 }
+
+fun EndpointConstants.Public.Problems.getProblemByIdForUserUri(userId: String, problemId: String): String {
+    val uri = "http://${ConsulConstants.ServiceNames.PROBLEMS_SERVICE}/problems/${problemId}?userId=${userId}"
+    return uri
+}
