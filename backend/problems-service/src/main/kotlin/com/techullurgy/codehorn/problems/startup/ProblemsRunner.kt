@@ -11,15 +11,16 @@ import com.techullurgy.codehorn.problems.data.entities.Problem
 import com.techullurgy.codehorn.problems.data.entities.Snippet
 import com.techullurgy.codehorn.problems.data.mappers.toTestcase
 import com.techullurgy.codehorn.problems.data.repositories.ProblemsRepository
+import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
 @Component
 class ProblemsRunner(
-    private val problemsRepository: ProblemsRepository
+    private val problemsService: ProblemsService
 ): CommandLineRunner {
     override fun run(vararg args: String?) {
-        problemsRepository.saveAll(problems)
+        problems.forEach(problemsService::saveProblem)
     }
 }
 

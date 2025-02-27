@@ -49,3 +49,6 @@ target
 node_modules
 .vite
 
+### Logs ###
+logs
+

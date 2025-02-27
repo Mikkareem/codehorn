@@ -1,2 +1,0 @@
-consul:
-  host: ${CODEHORN_CONSUL_HOST}

@@ -30,16 +30,4 @@ data class Problem(
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "problem_id")
     val testcaseFormats: MutableList<TestcaseFormat> = mutableListOf()
-) {
-    @SequenceGenerator(name = "problem_no_seq", sequenceName = "problem_no_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "problem_no_seq")
-    @Column(insertable = false, updatable = false)
-    private var generatedProblemNo: Int? = null
-
-    @PrePersist
-    fun assignProblemNo() {
-        if(problemNo == null) {
-            problemNo = generatedProblemNo
-        }
-    }
-}
+)

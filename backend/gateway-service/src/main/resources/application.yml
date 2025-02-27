@@ -1,9 +1,11 @@
 spring:
-#  security:
-#    user:
-#      name: 'Irsath'
-#      password: '1234'
+  application:
+    name: GATEWAY-SERVICE
 
   cloud:
     consul:
-      enabled: false
+      host: localhost
+      discovery:
+        service-name: GATEWAY-SERVICE
+        healthCheckPath: /health-check   # 👈 Custom health check path
+        healthCheckInterval: 15s

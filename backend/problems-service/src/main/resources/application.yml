@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: PROBLEMS-SERVICE
+
+  cloud:
+    consul:
+      host: localhost
+      discovery:
+        service-name: PROBLEMS-SERVICE
+        healthCheckPath: /health-check   # 👈 Custom health check path
+        healthCheckInterval: 15s
+
+  sql:
+    init:
+      mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
