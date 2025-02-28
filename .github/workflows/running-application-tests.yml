@@ -32,11 +32,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Temp env
+        run: gh variable set APP_HOST --body "Laptop"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Writing environment variables (APP_HOST)
         run: echo "APP_HOST=${{ vars.APP_HOST }}" >> $GITHUB_ENV
 
       - name: Reading APP_HOST
-        run: echo $APP_HOST
+        run: echo 'App Host is $APP_HOST'
 
       - name: Testing the Services
         run: ./gradlew clean :combined-tests:test
