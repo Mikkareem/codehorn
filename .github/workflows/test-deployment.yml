@@ -112,7 +112,11 @@ jobs:
         working-directory: backend/terraform/local-cloud-deployment
 
       - name: Writing terraform output (APP_HOST) to Environment
-        run: echo "APP_HOST=$(terraform output -raw app_instance_ip)" | gh variable set APP_HOST --body $APP_HOST
+        run: echo "APP_HOST=$(terraform output -raw app_instance_ip)" > app_host.txt
         working-directory: backend/terraform/local-cloud-deployment
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-host
+          path: app_host.txt
