@@ -32,6 +32,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Writing environment variables (APP_HOST)
+        run: echo "APP_HOST=${{ vars.APP_HOST }}" >> $GITHUB_ENV
+
+      - name: Reading APP_HOST
+        run: echo $APP_HOST
+
       - name: Testing the Services
         run: ./gradlew clean :combined-tests:test
         working-directory: backend
