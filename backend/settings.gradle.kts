@@ -3,6 +3,8 @@ rootProject.name = "codehorn"
 include("common")
 include("code-execution-domain")
 
+include("combined-tests")
+
 include("problems-service")
 include("gateway-service")
 include("submissions-service")

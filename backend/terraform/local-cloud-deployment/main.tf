@@ -127,7 +127,7 @@ resource "aws_iam_instance_profile" "ec2_s3_profile" {
   role = aws_iam_role.ec2_s3_role.name
 }
 
-resource "aws_instance" "aws_java_exec_service_instance" {
+resource "aws_instance" "aws_gateway_service_instance" {
   ami = "ami-0c50b6f7dc3701ddd"
   instance_type = "t2.micro"
   key_name = var.key_pair_name
@@ -143,7 +143,7 @@ resource "aws_instance" "aws_java_exec_service_instance" {
               EOF
 
   tags = {
-    Name = "CodehornJavaExecutionInstance"
+    Name = "CodehornGatewayInstance"
   }
 
   provisioner "remote-exec" {
@@ -155,24 +155,108 @@ resource "aws_instance" "aws_java_exec_service_instance" {
     }
 
     inline = [
-      "echo 'Setup of Java Execution Service, Starting....'",
+      "echo 'Setup of Gateway Service, Starting....'",
       "echo Consul Host: $CODEHORN_CONSUL_HOST",
       "sudo yum update -y",
       "sudo yum install -y java-17-amazon-corretto",
       "cd /home/ec2-user",
       "touch app.log",
-      "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service.jar app.jar",
+      "aws s3 cp s3://${var.sources-bucket-name}/gateway-service.jar app.jar",
       "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
       "sleep 10",
-      "echo 'Setup of Java Execution Service, Stopped'",
+      "echo 'Setup of Gateway Service, Stopped'",
     ]
   }
 }
+
+resource "aws_instance" "aws_problems_service_instance" {
+  ami = "ami-0c50b6f7dc3701ddd"
+  instance_type = "t2.micro"
+  key_name = var.key_pair_name
+
+  security_groups = [aws_security_group.allow_ssh.name, aws_security_group.service_sg.name]
+
+  iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name  # Attach IAM role
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo "export CODEHORN_CONSUL_HOST=${aws_instance.aws_consul.public_ip}" >> /etc/environment
+              source /etc/environment
+              EOF
+
+  tags = {
+    Name = "CodehornProblemsInstance"
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type = "ssh"
+      host = self.public_ip
+      user = "ec2-user"
+      private_key = file("${var.key_pair_name}.pem")
+    }
+
+    inline = [
+      "echo 'Setup of Problems Service, Starting....'",
+      "echo Consul Host: $CODEHORN_CONSUL_HOST",
+      "sudo yum update -y",
+      "sudo yum install -y java-17-amazon-corretto",
+      "cd /home/ec2-user",
+      "touch app.log",
+      "aws s3 cp s3://${var.sources-bucket-name}/problems-service.jar app.jar",
+      "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
+      "sleep 10",
+      "echo 'Setup of Problems Service, Stopped'",
+    ]
+  }
+}
+
+# resource "aws_instance" "aws_java_exec_service_instance" {
+#   ami = "ami-0c50b6f7dc3701ddd"
+#   instance_type = "t2.micro"
+#   key_name = var.key_pair_name
+#
+#   security_groups = [aws_security_group.allow_ssh.name, aws_security_group.service_sg.name]
+#
+#   iam_instance_profile = aws_iam_instance_profile.ec2_s3_profile.name  # Attach IAM role
+#
+#   user_data = <<-EOF
+#               #!/bin/bash
+#               echo "export CODEHORN_CONSUL_HOST=${aws_instance.aws_consul.public_ip}" >> /etc/environment
+#               source /etc/environment
+#               EOF
+#
+#   tags = {
+#     Name = "CodehornJavaExecutionInstance"
+#   }
+#
+#   provisioner "remote-exec" {
+#     connection {
+#       type = "ssh"
+#       host = self.public_ip
+#       user = "ec2-user"
+#       private_key = file("${var.key_pair_name}.pem")
+#     }
+#
+#     inline = [
+#       "echo 'Setup of Java Execution Service, Starting....'",
+#       "echo Consul Host: $CODEHORN_CONSUL_HOST",
+#       "sudo yum update -y",
+#       "sudo yum install -y java-17-amazon-corretto",
+#       "cd /home/ec2-user",
+#       "touch app.log",
+#       "aws s3 cp s3://${var.sources-bucket-name}/java-execution-service.jar app.jar",
+#       "nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &",
+#       "sleep 10",
+#       "echo 'Setup of Java Execution Service, Stopped'",
+#     ]
+#   }
+# }
 
 output "consul_service_instance_ip" {
   value = aws_instance.aws_consul.public_ip
 }
 
-output "java_exec_service_instance_ip" {
-  value = aws_instance.aws_java_exec_service_instance.public_ip
+output "app_instance_ip" {
+  value = aws_instance.aws_gateway_service_instance.public_ip
 }

@@ -1,4 +1,4 @@
-./gradlew clean build
+./gradlew clean build -x test
 
 CONSUL_ENABLED=false
 APP_VERSION=1.0.0

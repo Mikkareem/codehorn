@@ -20,6 +20,7 @@ class DefaultSecurityFilterChainConfigurer(
             .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
             .authorizeHttpRequests {
                 it
+                    .requestMatchers("/health-check").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
             }

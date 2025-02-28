@@ -88,7 +88,7 @@ jobs:
       - name: Upload JARs to S3
         run: |
           aws s3 mb s3://${{ secrets.TEMP_S3_BUCKET }}
-          for jar in java-execution-service; do
+          for jar in gateway-service problems-service; do
             aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
         working-directory: backend
@@ -110,3 +110,6 @@ jobs:
       - name: Apply Terraform
         run: terraform apply -auto-approve
         working-directory: backend/terraform/local-cloud-deployment
+
+      - name: Writing terraform output (APP_HOST) to Environment
+        run: echo "APP_HOST=$(terraform output -raw app_instance_ip)" >> $GITHUB_ENV

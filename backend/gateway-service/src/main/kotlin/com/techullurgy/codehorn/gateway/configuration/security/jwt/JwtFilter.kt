@@ -21,7 +21,7 @@ class JwtFilter: OncePerRequestFilter() {
         try {
             val path = request.requestURI
 
-            if(path.startsWith("/auth/")) {
+            if(path.startsWith("/auth/") || path == "/health-check") {
                 filterChain.doFilter(request, response)
                 return
             }
