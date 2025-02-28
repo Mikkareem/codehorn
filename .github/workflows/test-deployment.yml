@@ -113,3 +113,4 @@ jobs:
 
       - name: Writing terraform output (APP_HOST) to Environment
         run: echo "APP_HOST=$(terraform output -raw app_instance_ip)" >> $GITHUB_ENV
+        working-directory: backend/terraform/local-cloud-deployment
