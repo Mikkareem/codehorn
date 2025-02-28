@@ -33,5 +33,5 @@ jobs:
           java-version: '17'
 
       - name: Testing the Services
-        run: ./gradlew clean test
+        run: ./gradlew clean :combined-tests:test
         working-directory: backend
