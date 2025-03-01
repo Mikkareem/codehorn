@@ -11,4 +11,4 @@ jobs:
         run: echo "APP_HOST=12345667" >> $GITHUB_ENV
 
       - name: Reading APP_HOST
-        run: echo 'App Host is $APP_HOST'
+        run: echo "App Host is $APP_HOST"
