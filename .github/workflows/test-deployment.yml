@@ -122,7 +122,7 @@ jobs:
           path: backend/terraform/local-cloud-deployment/app_host.txt
 
   test-application:
-				needs: upload
+    needs: upload
     runs-on: ubuntu-latest
     steps:
 
