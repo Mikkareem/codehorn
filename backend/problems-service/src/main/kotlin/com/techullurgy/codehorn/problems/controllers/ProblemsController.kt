@@ -36,6 +36,7 @@ class ProblemsController(
         val problem = problemsService.getAllProblems().first()
 
         val problemDTO = ProblemDTO(
+            problemId = problem.id!!,
             problemNo = problemId.toInt(),
             title = problem.title,
             difficulty = problem.difficulty,
