@@ -120,3 +120,47 @@ jobs:
         with:
           name: app-host
           path: backend/terraform/local-cloud-deployment/app_host.txt
+
+  test-application:
+				needs: upload
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'local-test'
+
+      - name: Change Gradle-wrapper Properties
+        run: |
+          cat <<EOF > ./gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dist
+          EOF
+        working-directory: backend
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-host
+
+      - name: Writing environment variables (APP_HOST)
+        run: echo "APP_HOST=$(cat app_host.txt)" >> $GITHUB_ENV
+
+      - name: Reading APP_HOST
+        run: echo 'App Host is $APP_HOST'
+
+      - name: Testing the Services
+        run: ./gradlew clean :combined-tests:test
+        working-directory: backend
