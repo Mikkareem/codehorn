@@ -112,7 +112,7 @@ jobs:
         working-directory: backend/terraform/local-cloud-deployment
 
       - name: Writing terraform output (APP_HOST) to Environment
-        run: echo "APP_HOST=$(terraform output -raw app_instance_ip)" > app_host.txt
+        run: echo "$(terraform output -raw app_instance_ip)" > app_host.txt
         working-directory: backend/terraform/local-cloud-deployment
 
       - name: Upload artifact
@@ -159,7 +159,7 @@ jobs:
         run: echo "APP_HOST=$(cat app_host.txt)" >> $GITHUB_ENV
 
       - name: Reading APP_HOST
-        run: echo 'App Host is $APP_HOST'
+        run: echo "App Host is $APP_HOST"
 
       - name: Testing the Services
         run: ./gradlew clean :combined-tests:test
