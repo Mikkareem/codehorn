@@ -2,10 +2,13 @@ package com.techullurgy.codehorn.problems.controllers
 
 import com.techullurgy.codehorn.common.annotations.InternalRestApi
 import com.techullurgy.codehorn.common.constants.EndpointConstants
+import com.techullurgy.codehorn.common.dto.FileContentDTO
 import com.techullurgy.codehorn.common.dto.ProblemDTO
+import com.techullurgy.codehorn.common.dto.SnippetDTO
 import com.techullurgy.codehorn.common.responses.ProblemByIdForUserResponse
 import com.techullurgy.codehorn.common.responses.ProblemByIdResponse
 import com.techullurgy.codehorn.common.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.problems.data.mappers.toProblemTestcase
 import com.techullurgy.codehorn.problems.data.mappers.toTestcaseDTO
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.http.ResponseEntity
@@ -20,10 +23,45 @@ class ProblemsController(
 ) {
     @InternalRestApi
     @GetMapping(EndpointConstants.Internal.Problems.GET_PROBLEM_BY_ID_FOR_CODE_EXECUTION)
-    fun problemByIdForExecution(@PathVariable("id") problemId: String): ResponseEntity<ProblemByIdResponse> {
-        val problem = problemsService.getProblemById(problemId)
+    fun problemByIdForExecution(
+        @PathVariable("id") problemId: String,
+        @RequestParam("userId") userId: String
+    ): ResponseEntity<ProblemByIdResponse> {
+//        val problem = problemsService.getProblemById(problemId)
 
-        return ResponseEntity.notFound().build<ProblemByIdResponse>()
+        val problem = problemsService.getAllProblems().first()
+
+        val response = ProblemByIdResponse(
+            id = problemId,
+            title = problem.title,
+            description = problem.description,
+            difficulty = problem.difficulty,
+            problemNo = problem.problemNo!!,
+            snippet = SnippetDTO(
+                id = problem.snippet.id,
+                c = problem.snippet.c,
+                cpp = problem.snippet.cpp,
+                java = problem.snippet.java,
+                python = problem.snippet.python,
+                javascript = problem.snippet.javascript,
+            ),
+            fileContent = FileContentDTO(
+                id = problem.fileContent.id,
+                c = problem.fileContent.c,
+                cpp = problem.fileContent.cpp,
+                java = problem.fileContent.java,
+                python = problem.fileContent.python,
+                javascript = problem.fileContent.javascript,
+                creplaceStr = problem.fileContent.creplaceStr,
+                cppReplaceStr = problem.fileContent.cppReplaceStr,
+                javaReplaceStr = problem.fileContent.javaReplaceStr,
+                pythonReplaceStr = problem.fileContent.pythonReplaceStr,
+                javascriptReplaceStr = problem.fileContent.javascriptReplaceStr,
+            ),
+            testcases = problem.testcases.map { it.toProblemTestcase() }
+        )
+
+        return ResponseEntity.ok(response)
     }
 
     @GetMapping(EndpointConstants.Public.Problems.GET_PROBLEM_BY_ID_FOR_USER)

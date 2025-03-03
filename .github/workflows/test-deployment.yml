@@ -2,6 +2,11 @@ name: Start Test Deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      run_test_application:
+        description: 'Run TestApplication? (yes/no)'
+        required: true
+        default: 'yes'
 
 jobs:
   upload:
@@ -92,7 +97,7 @@ jobs:
       - name: Upload JARs to S3
         run: |
           aws s3 mb s3://${{ secrets.TEMP_S3_BUCKET }}
-          for jar in gateway-service problems-service; do
+          for jar in gateway-service problems-service code-execution-service java-execution-service; do
             aws s3 cp $jar/build/libs/$jar-1.0.0.jar s3://${{ secrets.TEMP_S3_BUCKET }}/$jar.jar
           done
         working-directory: backend
@@ -122,6 +127,7 @@ jobs:
 
   test-application:
     needs: upload
+    if: ${{ github.event.inputs.run_test_application == 'yes' }}
     runs-on: ubuntu-latest
     steps:
 

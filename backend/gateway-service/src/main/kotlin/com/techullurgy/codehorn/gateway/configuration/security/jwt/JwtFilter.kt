@@ -9,10 +9,16 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class JwtFilter: OncePerRequestFilter() {
+class JwtFilter(
+    private val permittedRoutes: List<String>
+): OncePerRequestFilter() {
+
+    private val pathMatcher = AntPathMatcher()
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -21,7 +27,7 @@ class JwtFilter: OncePerRequestFilter() {
         try {
             val path = request.requestURI
 
-            if(path.startsWith("/auth/") || path == "/health-check") {
+            if(permittedRoutes.any { pathMatcher.match(it, path) }) {
                 filterChain.doFilter(request, response)
                 return
             }

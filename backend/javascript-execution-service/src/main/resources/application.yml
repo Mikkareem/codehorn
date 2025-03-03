@@ -1,11 +1,11 @@
 spring:
   application:
-    name: SUBMISSIONS-SERVICE
+    name: JAVASCRIPT-EXECUTION-SERVICE
 
   cloud:
     consul:
       host: ${CODEHORN_CONSUL_HOST:localhost}
       discovery:
-        service-name: SUBMISSIONS-SERVICE
+        service-name: JAVASCRIPT-EXECUTION-SERVICE
         healthCheckPath: /health-check   # 👈 Custom health check path
         healthCheckInterval: 15s

@@ -5,6 +5,8 @@ include("code-execution-domain")
 
 include("combined-tests")
 
+include("common-web")
+
 include("problems-service")
 include("gateway-service")
 include("submissions-service")

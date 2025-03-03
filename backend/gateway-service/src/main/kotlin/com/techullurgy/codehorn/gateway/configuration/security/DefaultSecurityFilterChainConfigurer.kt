@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component
 class DefaultSecurityFilterChainConfigurer(
     private val authEntryPoint: AuthenticationEntryPoint,
     private val jwtFilter: JwtFilter,
-    private val http: HttpSecurity
+    private val http: HttpSecurity,
+    private val permittedRoutes: List<String>
 ) {
     fun configure(): SecurityFilterChain {
         return http
@@ -20,8 +21,7 @@ class DefaultSecurityFilterChainConfigurer(
             .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/health-check").permitAll()
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(*permittedRoutes.toTypedArray()).permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement {

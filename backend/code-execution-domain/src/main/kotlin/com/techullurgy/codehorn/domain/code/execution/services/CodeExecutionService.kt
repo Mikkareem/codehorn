@@ -34,11 +34,13 @@ class CodeExecutionService(
 
         createDockerFileUseCase(submissionId)
 
+        return emptyList()
+
         val isCreated = buildDockerImageUseCase(submissionId)
 
         val results = if(isCreated) {
-            val results = executeForResults(submissionId, testcases, executionType)
-            results.toList().filter { it !is CodeExecutionResult.NotExecuted }
+            val results = executeForResults(submissionId, testcases, executionType).toList()
+            results //results.filter { it !is CodeExecutionResult.NotExecuted }
         } else {
             listOf(CodeExecutionResult.CompilationError(""))
         }

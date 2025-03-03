@@ -11,6 +11,9 @@ dependencies {
     // Spring Boot Starter Test (JUnit, MockMvc, AssertJ, Mockito, etc.)
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect")
+
     // Kotlin Testing Libraries
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 

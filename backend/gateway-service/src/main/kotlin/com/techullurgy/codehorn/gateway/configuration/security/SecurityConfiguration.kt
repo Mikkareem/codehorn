@@ -10,4 +10,13 @@ class SecurityConfiguration {
     fun securityFilterChain(configurer: DefaultSecurityFilterChainConfigurer): SecurityFilterChain {
         return configurer.configure()
     }
+
+    @Bean
+    fun permittedRoutes(): List<String> {
+        return listOf(
+            "/health-check",
+            "/auth/**",
+            "/test/**"
+        )
+    }
 }

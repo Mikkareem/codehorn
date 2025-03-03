@@ -1,42 +1,40 @@
 package com.techullurgy.codehorn.codeexecution.controllers
 
-import com.techullurgy.codehorn.common.requests.CodeExecutionRequest
+import com.techullurgy.codehorn.codeexecution.services.OverallCodeExecutionService
+import com.techullurgy.codehorn.common.constants.EndpointConstants
+import com.techullurgy.codehorn.common.constants.getProblemByIdForCodeExecution
+import com.techullurgy.codehorn.common.requests.CodeRequest
+import com.techullurgy.codehorn.common.responses.ProblemByIdResponse
+import com.techullurgy.codehorn.common.responses.RunResultResponse
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestClient
 
 @RestController
-@RequestMapping("/code/execution")
-class CodeExecutionController {
+class CodeExecutionController(
+    private val service: OverallCodeExecutionService
+) {
 
-    private val restClient: RestClient = RestClient.builder()
-        .baseUrl("http://localhost:8081")
-        .build()
+    @PostMapping(EndpointConstants.Public.CodeExecution.POST_RUN_CODE_BY_USER)
+    fun runCode(
+        @RequestBody request: CodeRequest,
+        @PathVariable("id") problemId: String,
+        @RequestParam(value = "userId", required = true) userId: String
+    ): ResponseEntity<RunResultResponse> {
+        return service.runCode(userId, problemId, request)
+    }
 
+    @PostMapping(EndpointConstants.Public.CodeExecution.POST_SUBMIT_CODE_BY_USER)
+    fun submitCode(
+        @RequestBody request: CodeRequest,
+        @PathVariable("id") problemId: String,
+        @RequestParam(value = "userId", required = true) userId: String
+    ) {
 
-    @PostMapping
-    fun test() {
-        val response = restClient
-            .post()
-            .uri("/code/execution/java")
-            .body(
-                CodeExecutionRequest(
-                    submissionId = "9a0s9das9",
-                    fileContent = "JAVA_CODE_HERE",
-                    sampleTestcases = listOf(
-//                        TestcaseDTO("190"),
-//                        TestcaseDTO("39"),
-//                        TestcaseDTO("46"),
-                    ),
-                    hiddenTestcases = listOf(
-//                        TestcaseDTO("9"),
-//                        TestcaseDTO("61"),
-//                        TestcaseDTO("65"),
-                    ),
-                )
-            )
-            .retrieve()
-            .toEntity(String::class.java)
     }
 }

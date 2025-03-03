@@ -22,14 +22,23 @@ class ProblemsRelatedTest {
     @Test
     @Order(1)
     fun getProblemByIdForUser() {
-        val response = client.get()
+        val response1 = client.get()
             .uri("/problems/19")
             .header("Authorization", "Bearer 12345678")
             .retrieve()
             .toEntity(ProblemByIdForUserResponse::class.java)
 
-        assertEquals(HttpStatusCode.valueOf(200), response.statusCode)
-        assertEquals(19, response.body!!.problem.problemNo)
+        assertEquals(HttpStatusCode.valueOf(200), response1.statusCode)
+        assertEquals(19, response1.body!!.problem.problemNo)
+
+        val response2 = client.get()
+            .uri("/problems/19")
+            .header("Authorization", "Bearer 12345678")
+            .retrieve()
+            .toEntity(ProblemByIdForUserResponse::class.java)
+
+        assertEquals(HttpStatusCode.valueOf(200), response2.statusCode)
+        assertEquals(19, response2.body!!.problem.problemNo)
     }
 
     @Test
