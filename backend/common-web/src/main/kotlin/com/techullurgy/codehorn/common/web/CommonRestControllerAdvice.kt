@@ -32,6 +32,7 @@ class CommonRestControllerAdvice(
 
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<FailureResponse> {
+        ex.printStackTrace()
         val errorResponse = FailureResponse(
             message = ex.message ?: "Unknown error occurred",
         )

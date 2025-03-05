@@ -9,6 +9,10 @@ class UserFileCreator(
 ): Closeable {
     val file = File("temp/$language/$submissionId").apply { mkdirs() }
 
+    init {
+        File("temp/$language/$submissionId/outputs").mkdir()
+    }
+
     override fun close() {
         file.deleteRecursively()
     }

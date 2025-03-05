@@ -2,6 +2,8 @@ package com.techullurgy.codehorn.problems.data.entities
 
 import com.techullurgy.codehorn.common.model.Difficulty
 import jakarta.persistence.*
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 data class Problem(
@@ -15,19 +17,19 @@ data class Problem(
     @Column(unique = true, nullable = false)
     var problemNo: Int? = null,
 
-    @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "snippet_id")
-    val snippet: Snippet,
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "snippet_id", foreignKey = ForeignKey(name = "fk_problem_snippet"))
+    var snippet: Snippet? = null,
 
-    @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "file_content_id")
-    val fileContent: FileContent,
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "file_content_id", foreignKey = ForeignKey(name = "fk_problem_file_content"))
+    var fileContent: FileContent? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "problem_id")
+    @OneToMany(mappedBy="problem", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     val testcases: MutableList<Testcase> = mutableListOf(),
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "problem_id")
+    @OneToMany(mappedBy="problem", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     val testcaseFormats: MutableList<TestcaseFormat> = mutableListOf()
 )

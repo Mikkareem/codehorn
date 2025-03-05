@@ -19,7 +19,6 @@ class CreateNecessaryTestcaseFilesUseCase(
     operator fun invoke(submissionId: String, testcases: List<ProblemTestcase>) {
         val inputFilePath = inputFilePathProvider.getObject(submissionId).provide()
 
-        File("$inputFilePath/outputs").mkdir()
         testcases.forEach { it ->
             val testcaseFilePath = "$inputFilePath/testcases/input${it.id}.txt"
             FileService.writeFile(testcaseFilePath, testcaseParser.parse(it))
