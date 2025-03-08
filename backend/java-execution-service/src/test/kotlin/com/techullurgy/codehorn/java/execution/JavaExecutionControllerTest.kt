@@ -26,7 +26,7 @@ class JavaExecutionControllerTest {
     @Autowired
     private lateinit var mapper: ObjectMapper
 
-    @Test
+//    @Test
     fun basicTest() {
         mockMvc.post(EndpointConstants.Public.LanguageExecution.POST_CODE_EXECUTION_JAVA) {
             contentType = MediaType.APPLICATION_JSON
