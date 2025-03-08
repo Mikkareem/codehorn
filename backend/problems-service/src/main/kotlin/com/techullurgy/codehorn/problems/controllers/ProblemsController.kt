@@ -2,12 +2,13 @@ package com.techullurgy.codehorn.problems.controllers
 
 import com.techullurgy.codehorn.common.annotations.InternalRestApi
 import com.techullurgy.codehorn.common.constants.EndpointConstants
-import com.techullurgy.codehorn.common.dto.FileContentDTO
-import com.techullurgy.codehorn.common.dto.ProblemDTO
-import com.techullurgy.codehorn.common.dto.SnippetDTO
-import com.techullurgy.codehorn.common.responses.ProblemByIdForUserResponse
-import com.techullurgy.codehorn.common.responses.ProblemByIdResponse
-import com.techullurgy.codehorn.common.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.common.web.dto.FileContentDTO
+import com.techullurgy.codehorn.common.web.dto.ProblemDTO
+import com.techullurgy.codehorn.common.web.dto.SnippetDTO
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdForUserResponse
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdResponse
+import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.problems.data.mappers.toProblemTestcase
 import com.techullurgy.codehorn.problems.data.mappers.toTestcaseDTO
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.http.ResponseEntity
@@ -57,7 +58,7 @@ class ProblemsController(
                 pythonReplaceStr = problem.fileContent!!.pythonReplaceStr,
                 javascriptReplaceStr = problem.fileContent!!.javascriptReplaceStr,
             ),
-            testcases = emptyList() //problem.testcases.map { it.toProblemTestcase() }
+            testcases = problem.testcases.map { it.toProblemTestcase() }
         )
 
         return ResponseEntity.ok(response)

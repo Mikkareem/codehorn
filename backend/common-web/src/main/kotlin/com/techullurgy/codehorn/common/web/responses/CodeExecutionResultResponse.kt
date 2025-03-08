@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.common.responses
+package com.techullurgy.codehorn.common.web.responses
 
 import com.techullurgy.codehorn.common.model.TestcaseResult
 

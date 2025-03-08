@@ -1,6 +1,6 @@
 package com.techullurgy.codehorn.submissions.controllers
 
-import com.techullurgy.codehorn.common.requests.CodeRequest
+import com.techullurgy.codehorn.common.web.requests.CodeRequest
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

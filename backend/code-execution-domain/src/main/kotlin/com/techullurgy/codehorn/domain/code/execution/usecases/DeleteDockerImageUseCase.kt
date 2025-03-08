@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit
 @Component
 class DeleteDockerImageUseCase {
     operator fun invoke(submissionId: String) {
-        val imageName = "${Compiler.BASE_IMAGE_PREFIX}-$submissionId"
+        val imageName = "${Compiler.BASE_IMAGE_PREFIX}-$submissionId".lowercase()
         val builder = ProcessBuilder("docker", "rmi", "$imageName:latest")
-        val process = builder.start();
+        val process = builder.start()
         val isNotAborted = process.waitFor(10, TimeUnit.SECONDS)
 
         if (isNotAborted) {

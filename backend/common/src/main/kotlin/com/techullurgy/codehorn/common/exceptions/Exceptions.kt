@@ -3,4 +3,4 @@ package com.techullurgy.codehorn.common.exceptions
 
 class ProblemNotFoundException: RuntimeException()
 class TestcaseFormatNotFoundException: RuntimeException()
-class TestcaseInputNotValidException: RuntimeException()
+class TestcaseInputNotValidException: RuntimeException("Input not valid")

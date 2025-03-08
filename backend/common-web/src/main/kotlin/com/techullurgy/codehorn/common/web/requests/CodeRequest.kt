@@ -1,6 +1,6 @@
-package com.techullurgy.codehorn.common.requests
+package com.techullurgy.codehorn.common.web.requests
 
-import com.techullurgy.codehorn.common.dto.TestcaseDTO
+import com.techullurgy.codehorn.common.web.dto.TestcaseDTO
 
 data class CodeRequest(
     val language: String,

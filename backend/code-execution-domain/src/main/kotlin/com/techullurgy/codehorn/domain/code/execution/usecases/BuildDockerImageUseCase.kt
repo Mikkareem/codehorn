@@ -2,6 +2,7 @@ package com.techullurgy.codehorn.domain.code.execution.usecases
 
 import com.techullurgy.codehorn.domain.code.execution.services.Compiler
 import com.techullurgy.codehorn.domain.code.execution.services.InputFilePathProvider
+import com.techullurgy.codehorn.domain.code.execution.services.utils.getErrors
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +18,7 @@ class BuildDockerImageUseCase {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     operator fun invoke(submissionId: String): Boolean {
-        val imageName = "${Compiler.BASE_IMAGE_PREFIX}-$submissionId"
+        val imageName = "${Compiler.BASE_IMAGE_PREFIX}-$submissionId".lowercase()
         val inputFilePath = inputFilePathProvider.getObject(submissionId).provide()
 
         val builder = ProcessBuilder("docker", "build", "-t", imageName, inputFilePath)
@@ -29,6 +30,7 @@ class BuildDockerImageUseCase {
                 logger.info("Docker image $imageName created successfully")
                 true
             } else {
+                logger.error(process.getErrors())
                 false
             }
         } else {

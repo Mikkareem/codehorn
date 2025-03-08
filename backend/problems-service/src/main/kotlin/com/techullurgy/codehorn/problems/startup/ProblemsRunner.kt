@@ -45,7 +45,7 @@ private val snippets = listOf(
             """.trimIndent(),
         java = """
                 class Solution {
-                    public int add(int n) {
+                    public int add(int a, int b) {
                     
                     }
                 }
@@ -233,7 +233,8 @@ private val fileContents = listOf(
     
                 public class Main {
                   public static void main(String[] args) throws Exception {
-                    MainUtils.readFromFileAndSaveInMap("/tmp/java/testcases/input"+args[0]+".txt");
+                    String testcaseType = args[0].toLowerCase();
+                    MainUtils.readFromFileAndSaveInMap("/tmp/java/testcases/"+testcaseType+"-input"+args[1]+".txt");
                     
                     // Your Code Here
                     int a = MainUtils.getInteger();
@@ -242,17 +243,27 @@ private val fileContents = listOf(
                     OriginalSolution osol = new OriginalSolution();
                     int eResult = osol.addTwo(a, b);
 
-                    String resultFileName = "outputs/result" + args[0] + ".txt";
+                    String resultFileName = "outputs/result" + args[1] + ".txt";
                     
-                    String eResultFileName = "outputs/eResult" + args[0] + ".txt";
+                    String eResultFileName = "outputs/eResult" + args[1] + ".txt";
                     
                     Solution sol = new Solution();
                     int result = sol.addTwo(a, b);
                     
-                    System.setOut(userFileResult);
-                    System.out.print(result);
-                    System.setOut(userFileEResult);
-                    System.out.print(eResult);
+                    System.out.println(result);
+                    System.out.println(eResult);
+                    
+                    try (FileWriter writer = new FileWriter(resultFileName)) {
+                        writer.write(String.valueOf(result));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    try (FileWriter writer = new FileWriter(eResultFileName)) {
+                        writer.write(String.valueOf(eResult));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                   }
                 }
             """.trimIndent(),
@@ -521,8 +532,8 @@ private val problems: List<Problem> = listOf(
         title = "Add Two numbers",
         description = "<p>Given integer <code>n</code>, Return a number which is multiplied by 2 with <code>n</code></p>",
         difficulty = Difficulty.Easy,
-        snippet = snippets[1],
-        fileContent = fileContents[1],
+        snippet = snippets[0],
+        fileContent = fileContents[0],
         testcaseFormats = listOf(
             TestcaseFormat(
                 name = "x",

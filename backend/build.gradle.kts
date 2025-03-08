@@ -29,7 +29,7 @@ subprojects {
     // Configure Kotlin compiler options
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         compilerOptions {
-            freeCompilerArgs.set(listOf("-Xjsr305=strict"))
+            freeCompilerArgs.set(listOf("-Xjsr305=strict", "-Xmulti-dollar-interpolation"))
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
@@ -45,6 +45,10 @@ subprojects {
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
             testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        }
+
+        tasks.test {
+            useJUnitPlatform()
         }
     }
 }

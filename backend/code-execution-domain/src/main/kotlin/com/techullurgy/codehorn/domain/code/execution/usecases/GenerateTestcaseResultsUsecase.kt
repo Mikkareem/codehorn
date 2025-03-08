@@ -3,34 +3,46 @@ package com.techullurgy.codehorn.domain.code.execution.usecases
 import com.techullurgy.codehorn.common.model.CodeSubmissionResult
 import com.techullurgy.codehorn.common.model.ProblemTestcase
 import com.techullurgy.codehorn.common.model.TestcaseResult
-import com.techullurgy.codehorn.domain.code.execution.services.CodeExecutionResult
 import com.techullurgy.codehorn.domain.code.execution.services.FileService
 import org.springframework.stereotype.Component
 import java.io.File
 
 @Component
 class GenerateTestcaseResultsUseCase {
-    operator fun invoke(userFolder: File, testcases: List<ProblemTestcase>, results: List<CodeExecutionResult>): List<TestcaseResult> {
-        return results.mapIndexed { index, it ->
-            val currentTestcase = testcases[index]
+    operator fun invoke(
+        userFolder: File,
+        testcases: List<ProblemTestcase>,
+        results: Map<String, CodeSubmissionResult>
+    ): List<TestcaseResult> {
+        return results.map {
+            val currentTestcase = testcases.find { t ->  t.id == it.key }!!
 
-            val result = when(it) {
-                CodeExecutionResult.Accepted -> CodeSubmissionResult.Accepted
-                is CodeExecutionResult.CompilationError -> CodeSubmissionResult.CompilationError
-                is CodeExecutionResult.RuntimeError -> CodeSubmissionResult.RuntimeError
-                CodeExecutionResult.TimeLimitExceeded -> CodeSubmissionResult.TimeLimitExceeded
-                CodeExecutionResult.WrongAnswer -> CodeSubmissionResult.WrongAnswer
-                else -> CodeSubmissionResult.NotExecuted
-            }
+            val compilationError = if(it.value == CodeSubmissionResult.CompilationError) {
+                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/compilation_error.log")
+            } else ""
 
-            val expectedResult = if(result.isResultExists()) {
+            val expectedResult = if(it.value.isResultExists()) {
                 FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/eResult${currentTestcase.id}.txt")
             } else ""
-            val yourResult = if(result.isResultExists()) {
+
+            val yourResult = if(it.value.isResultExists()) {
                 FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/result${currentTestcase.id}.txt")
             } else ""
-            val stdout = if(result.isResultExists()) {
-                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/output${currentTestcase.id}.txt")
+
+            val stdout = if(it.value.isStandardOutExists()) {
+                if(currentTestcase.isHidden) {
+                    FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/hidden-out${currentTestcase.id}.log")
+                } else {
+                    FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/sample-out${currentTestcase.id}.log")
+                }
+            } else ""
+
+            val stderr = if(it.value.isStandardOutExists()) {
+                if(currentTestcase.isHidden) {
+                    FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/hidden-outerr${currentTestcase.id}.log")
+                } else {
+                    FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/sample-outerr${currentTestcase.id}.log")
+                }
             } else ""
 
             TestcaseResult(
@@ -38,7 +50,9 @@ class GenerateTestcaseResultsUseCase {
                 expectedResult = expectedResult,
                 yourResult = yourResult,
                 stdout = stdout,
-                result = result
+                stderr = stderr,
+                compilationError = compilationError,
+                result = it.value
             )
         }
     }

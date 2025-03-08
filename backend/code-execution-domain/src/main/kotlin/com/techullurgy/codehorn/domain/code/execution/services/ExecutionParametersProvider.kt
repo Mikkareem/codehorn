@@ -1,6 +1,6 @@
 package com.techullurgy.codehorn.domain.code.execution.services
 
-interface ExecutionParametersProvider: Provider {
+interface ExecutionParametersProvider {
     fun getCodeFileName(): String
 
     fun getLanguage(): String

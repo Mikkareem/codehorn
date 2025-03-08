@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.techullurgy.codehorn.common.model.ProblemTestcase
 import com.techullurgy.codehorn.common.model.TestcaseCollectionType
 import com.techullurgy.codehorn.common.model.TestcaseDataType
@@ -237,6 +236,45 @@ class CodehornTestcaseParserStrategyTest {
             7
             89
             -89
+            4
+            1
+            2
+            3
+            4
+            
+        """.trimIndent()
+
+
+        val actualOutput = parser.parse(testcase)
+
+        assertEquals(expectedOutput, actualOutput)
+    }
+
+    @Test
+    fun testSet9() {
+
+        val testcase = basicTestcase.copy(
+            inputs = listOf(
+                "[[-1, 7,       89, -89], [-9, 4, -1901, 2]]",
+                "[1,2,3,4]"
+            ),
+            masks = listOf(
+                TestcaseType(TestcaseDataType.LONG, TestcaseCollectionType.LIST_LIST).mask,
+                TestcaseType(TestcaseDataType.LONG, TestcaseCollectionType.LIST).mask,
+            )
+        )
+        val expectedOutput = """
+            2
+            4
+            -1
+            7
+            89
+            -89
+            4
+            -9
+            4
+            -1901
+            2
             4
             1
             2

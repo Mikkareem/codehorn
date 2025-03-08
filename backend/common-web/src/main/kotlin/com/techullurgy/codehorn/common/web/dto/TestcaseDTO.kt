@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.common.dto
+package com.techullurgy.codehorn.common.web.dto
 
 data class TestcaseDTO(
     val id: Long = 0,
@@ -9,5 +9,4 @@ data class TestcaseDTO(
 data class TestcaseInputDTO(
     val value: String,
     val name: String,
-    val format: String
 )
