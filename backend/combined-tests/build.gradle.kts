@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation(project(":common"))
+    testImplementation(project(":common-web"))
     // Spring Boot Starter Test (JUnit, MockMvc, AssertJ, Mockito, etc.)
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 

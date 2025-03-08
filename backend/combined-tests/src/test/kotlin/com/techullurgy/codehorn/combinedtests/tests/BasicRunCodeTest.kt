@@ -1,8 +1,8 @@
 package com.techullurgy.codehorn.combinedtests.tests
 
 import com.techullurgy.codehorn.common.model.CodeSubmissionResult
-import com.techullurgy.codehorn.common.requests.CodeRequest
-import com.techullurgy.codehorn.common.responses.RunResultResponse
+import com.techullurgy.codehorn.common.web.requests.CodeRequest
+import com.techullurgy.codehorn.common.web.responses.RunResultResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
