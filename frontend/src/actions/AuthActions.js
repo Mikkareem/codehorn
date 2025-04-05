@@ -25,3 +25,14 @@ export const getRolesOfUser = async () => {
     const { data } = await axiosInstance.get('/roles')
     return data.roles
 }
+
+export const fetchUserData = async (userId) => {
+    await new Promise(resolve => setTimeout(resolve, 3000))
+
+    console.log('Fetching data for user: ', userId)
+
+    return {
+        userId: userId+1,
+        message: 'Successfully fetched user data'
+    }
+}
