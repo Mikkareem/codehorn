@@ -6,10 +6,15 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.zulu17
-    pkgs.maven
+    pkgs.gradle
     pkgs.consul
   ];
   # Sets environment variables in the workspace
+  services = {
+    docker = {
+      enable = true;
+    };
+  };
   env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
@@ -18,16 +23,27 @@
       "rangav.vscode-thunder-client"
     ];
     workspace = {
-      # Runs when a workspace is first created with this `dev.nix` file
-      onCreate = {
-        install = "mvn clean install";
-      };
       # Runs when a workspace is (re)started
       onStart = {
-        run-server = "PORT=3000 mvn spring-boot:run";
         run-init-script = ''
-          chmod +x ./init.sh
-          ./init.sh
+          echo 'Start'
+          
+          echo 'Pulling Neccessary images'
+          docker pull amazoncorretto:21
+          echo 'Pulling Neccessary images done'
+
+          cat <<EOF > ./backend/gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\\://services.gradle.org/distributions/gradle-8.11-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dist
+          EOF
+
+          chmod +x ./backend/local-start-app.sh
+          ./backend/local-start-app.sh
           echo 'Done'
         '';
 
