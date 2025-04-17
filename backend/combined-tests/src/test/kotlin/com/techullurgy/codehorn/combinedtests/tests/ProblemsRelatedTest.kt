@@ -1,7 +1,7 @@
 package com.techullurgy.codehorn.combinedtests.tests
 
-import com.techullurgy.codehorn.common.responses.ProblemByIdForUserResponse
-import com.techullurgy.codehorn.common.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdForUserResponse
+import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestMethodOrder
