@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.common.dto
+package com.techullurgy.codehorn.common.web.dto
 
 data class SnippetDTO(
     val id: Long,

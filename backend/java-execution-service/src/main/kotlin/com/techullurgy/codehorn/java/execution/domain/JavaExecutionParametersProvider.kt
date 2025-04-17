@@ -11,9 +11,4 @@ class JavaExecutionParametersProvider: ExecutionParametersProvider {
     override fun getLanguage() = "java"
 
     override fun getCompiler() = Compiler.FROM_DOCKER_IMAGE_FOR_JAVA_COMPILER
-
-    override fun provide() = """|
-        |RUN javac ${getCodeFileName()}
-        |CMD java ${getCodeFileName().substringBefore('.')} $${"testcase_no"}
-    |"""
 }

@@ -1,85 +1,80 @@
 package com.techullurgy.codehorn.problems.startup
 
-import com.techullurgy.codehorn.common.dto.TestcaseDTO
-import com.techullurgy.codehorn.common.dto.TestcaseInputDTO
-import com.techullurgy.codehorn.common.dto.TestcaseInputDetailsDTO
 import com.techullurgy.codehorn.common.model.Difficulty
-import com.techullurgy.codehorn.common.model.TestcaseInputCollectionType
-import com.techullurgy.codehorn.common.model.TestcaseInputType
+import com.techullurgy.codehorn.common.model.TestcaseCollectionType
+import com.techullurgy.codehorn.common.model.TestcaseDataType
+import com.techullurgy.codehorn.common.model.TestcaseType
 import com.techullurgy.codehorn.problems.data.entities.FileContent
 import com.techullurgy.codehorn.problems.data.entities.Problem
 import com.techullurgy.codehorn.problems.data.entities.Snippet
-import com.techullurgy.codehorn.problems.data.mappers.toTestcase
-import com.techullurgy.codehorn.problems.data.repositories.ProblemsRepository
+import com.techullurgy.codehorn.problems.data.entities.Testcase
+import com.techullurgy.codehorn.problems.data.entities.TestcaseFormat
+import com.techullurgy.codehorn.problems.data.entities.TestcaseInput
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class ProblemsRunner(
     private val problemsService: ProblemsService
 ): CommandLineRunner {
+
     override fun run(vararg args: String?) {
-        problems.forEach(problemsService::saveProblem)
+        problems.forEachIndexed { index, p ->
+            problemsService.saveProblem(p)?.let { sp ->
+                testcases[index].forEach {
+                    problemsService.saveTestcaseForProblem(it, sp)
+                }
+            }
+        }
     }
 }
 
-private val problems: List<Problem> = listOf(
-    Problem(
-        title = "Add Two numbers",
-        description = "<p>Given integer <code>n</code>, Return a number which is multiplied by 2 with <code>n</code></p>",
-        difficulty = Difficulty.Easy,
-        snippet = Snippet(
-            c = """
+private val snippets = listOf(
+    Snippet(
+        c = """
                 int addTwo(int a, int b) {
                 
                 }
             """.trimIndent(),
-            cpp = """
+        cpp = """
                 int addTwo(int a, int b) {
                 
                 }
             """.trimIndent(),
-            java = """
+        java = """
                 class Solution {
-                    public int add(int n) {
+                    public int add(int a, int b) {
                     
                     }
                 }
             """.trimIndent(),
-            python = """
+        python = """
                 def addTwo(a: int, b: int):
                     
             """.trimIndent(),
-            javascript = """
+        javascript = """
                 function addTwo(int a, int b) {
                 
                 }
             """.trimIndent(),
-        ),
-        fileContent = FileContent(
-            c = """
+    ),
+    Snippet(
+        c = "C S",
+        cpp = "CPP S",
+        java = "JAVA S",
+        python = "PYTHON S",
+        javascript = "JAVASCRIPT S",
+    )
+)
+
+private val fileContents = listOf(
+    FileContent(
+        c = """
                 #include<stdio.h>
                 #include<stdlib.h>
                 #include<string.h>
-                
-                void logToOutput(int tNo) {
-                  char filePath[100];
-                  sprintf(filePath, "outputs/output%d.txt", tNo);
-                  freopen(filePath, "a", stdout);
-                }
-    
-                void logToResult(int tNo) {
-                  char filePath[100];
-                  sprintf(filePath, "outputs/result%d.txt", tNo);
-                  freopen(filePath, "a", stdout);
-                }
-    
-                void logToExpectedResult(int tNo) {
-                  char filePath[100];
-                  sprintf(filePath, "outputs/eResult%d.txt", tNo);
-                  freopen(filePath, "a", stdout);
-                }
                 
                 int getSingleInteger(FILE*);
                 long getSingleLong(FILE*);
@@ -163,12 +158,11 @@ private val problems: List<Problem> = listOf(
                   
                   int original = originalAddTwo(a, b);
                   
-                  logToOutput(tNo);
                   int result = addTwo(a, b);
                   
-                  logToResult(tNo);
+//                  logToResult(tNo);
                   printf("%d", result);
-                  logToExpectedResult(tNo);
+//                  logToExpectedResult(tNo);
                   printf("%d", original);
                   
                   if(result != original) return 168;
@@ -176,10 +170,10 @@ private val problems: List<Problem> = listOf(
                 
                 *****CODE*****
             """.trimIndent(),
-            creplaceStr = "*****CODE*****",
-            cpp = "",
-            cppReplaceStr = "",
-            java = """
+        creplaceStr = "*****CODE*****",
+        cpp = "",
+        cppReplaceStr = "",
+        java = """
                 import java.io.*;
                 import java.util.*;
     
@@ -239,7 +233,8 @@ private val problems: List<Problem> = listOf(
     
                 public class Main {
                   public static void main(String[] args) throws Exception {
-                    MainUtils.readFromFileAndSaveInMap("/tmp/java/testcases/input"+args[0]+".txt");
+                    String testcaseType = args[0].toLowerCase();
+                    MainUtils.readFromFileAndSaveInMap("/tmp/java/testcases/"+testcaseType+"-input"+args[1]+".txt");
                     
                     // Your Code Here
                     int a = MainUtils.getInteger();
@@ -247,41 +242,33 @@ private val problems: List<Problem> = listOf(
                     
                     OriginalSolution osol = new OriginalSolution();
                     int eResult = osol.addTwo(a, b);
+
+                    String resultFileName = "outputs/result" + args[1] + ".txt";
                     
-                    String outputFileName = "outputs/output" + args[0] + ".txt";
-                    File outputFile = new File(outputFileName);
-                    outputFile.createNewFile();
-                    PrintStream userFileOut = new PrintStream(outputFileName);
-
-                    String resultFileName = "outputs/result" + args[0] + ".txt";
-                    File resultFile = new File(resultFileName);
-                    resultFile.createNewFile();
-                    PrintStream userFileResult = new PrintStream(resultFileName);
-
-                    String eResultFileName = "outputs/eResult" + args[0] + ".txt";
-                    File eResultFile = new File(eResultFileName);
-                    eResultFile.createNewFile();
-                    PrintStream userFileEResult = new PrintStream(eResultFileName);
-
-                    System.setOut(userFileOut);
+                    String eResultFileName = "outputs/eResult" + args[1] + ".txt";
+                    
                     Solution sol = new Solution();
                     int result = sol.addTwo(a, b);
                     
-                    System.setOut(userFileResult);
-                    System.out.print(result);
-                    System.setOut(userFileEResult);
-                    System.out.print(eResult);
-
-
-                    if(result != eResult) {
-                        System.exit(168);
+                    System.out.println(result);
+                    System.out.println(eResult);
+                    
+                    try (FileWriter writer = new FileWriter(resultFileName)) {
+                        writer.write(String.valueOf(result));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    // End of your code
+                    
+                    try (FileWriter writer = new FileWriter(eResultFileName)) {
+                        writer.write(String.valueOf(eResult));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                   }
                 }
             """.trimIndent(),
-            javaReplaceStr = "*****CODE*****",
-            python = """
+        javaReplaceStr = "*****CODE*****",
+        python = """
                 from pathlib import Path
                 import sys
                 
@@ -388,8 +375,8 @@ private val problems: List<Problem> = listOf(
                 if(result != eResult):
                   sys.exit(168)
             """.trimIndent(),
-            pythonReplaceStr = "*****CODE*****",
-            javascript = """
+        pythonReplaceStr = "*****CODE*****",
+        javascript = """
                 const fs = require('fs');
                 const readline = require('readline')
 
@@ -524,78 +511,74 @@ private val problems: List<Problem> = listOf(
                 })()
 
             """.trimIndent(),
-            javascriptReplaceStr = "*****CODE*****"
-        ),
-        testcases = listOf(
-            TestcaseDTO (
-                isHidden = false,
-                inputs = listOf(
-                    TestcaseInputDTO (
-                        value = "24",
-                        details = TestcaseInputDetailsDTO (
-                            name = "x",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 1
-                        )
-                    ),
-                    TestcaseInputDTO (
-                        value = "98",
-                        details = TestcaseInputDetailsDTO (
-                            name = "y",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 2
-                        )
-                    ),
-                )
+        javascriptReplaceStr = "*****CODE*****"
+    ),
+    FileContent(
+        c = "C FC",
+        creplaceStr = "*****CODE*****",
+        cpp = "",
+        cppReplaceStr = "",
+        java = "JAVA FC",
+        javaReplaceStr = "*****CODE*****",
+        python = "PYTHON FC",
+        pythonReplaceStr = "*****CODE*****",
+        javascript = "JAVASCRIPT FC",
+        javascriptReplaceStr = "*****CODE*****"
+    )
+)
+
+private val problems: List<Problem> = listOf(
+    Problem(
+        title = "Add Two numbers",
+        description = "<p>Given integer <code>n</code>, Return a number which is multiplied by 2 with <code>n</code></p>",
+        difficulty = Difficulty.Easy,
+        snippet = snippets[0],
+        fileContent = fileContents[0],
+        testcaseFormats = listOf(
+            TestcaseFormat(
+                name = "x",
+                parserCode = "Parser code for X",
+                displayOrder = 1,
+                testcaseType = TestcaseType(TestcaseDataType.INT, TestcaseCollectionType.SINGLE).mask
             ),
-            TestcaseDTO (
-                isHidden = false,
-                inputs = listOf(
-                    TestcaseInputDTO (
-                        value = "-24",
-                        details = TestcaseInputDetailsDTO (
-                            name = "x",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 1
-                        )
-                    ),
-                    TestcaseInputDTO (
-                        value = "-8",
-                        details = TestcaseInputDetailsDTO (
-                            name = "y",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 2
-                        )
-                    ),
-                )
-            ),
-            TestcaseDTO (
-                isHidden = false,
-                inputs = listOf(
-                    TestcaseInputDTO (
-                        value = "67",
-                        details = TestcaseInputDetailsDTO (
-                            name = "x",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 1
-                        )
-                    ),
-                    TestcaseInputDTO (
-                        value = "528",
-                        details = TestcaseInputDetailsDTO (
-                            name = "y",
-                            type = TestcaseInputType.NON_STRING,
-                            collectionType = TestcaseInputCollectionType.SINGLE,
-                            displayOrder = 2
-                        )
-                    ),
-                )
+            TestcaseFormat(
+                name = "y",
+                parserCode = "Parser code for Y",
+                displayOrder = 2,
+                testcaseType = TestcaseType(TestcaseDataType.INT, TestcaseCollectionType.SINGLE).mask
             )
-        ).map { it.toTestcase() }.toMutableList()
+        ).toMutableList()
+    )
+)
+
+private val testcases: List<List<Testcase>> = listOf(
+    listOf(
+        Testcase(
+            isHidden = false,
+            inputs = listOf(
+                TestcaseInput(value = "123"),
+                TestcaseInput(value = "234"),
+            ).toMutableList()
+        ),
+        Testcase(
+            isHidden = false,
+            inputs = listOf(
+                TestcaseInput(value = "-892"),
+                TestcaseInput(value = "98"),
+            ).toMutableList()
+        ),
+        Testcase(
+            isHidden = false,
+            inputs = listOf(
+                TestcaseInput(value = "3"),
+                TestcaseInput(value = "-8"),
+            ).toMutableList()
+        ),
+        Testcase(
+            inputs = listOf(
+                TestcaseInput(value = "-13"),
+                TestcaseInput(value = "-18"),
+            ).toMutableList()
+        ),
     )
 )

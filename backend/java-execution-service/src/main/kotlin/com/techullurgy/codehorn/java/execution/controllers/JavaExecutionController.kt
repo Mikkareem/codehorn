@@ -1,12 +1,9 @@
 package com.techullurgy.codehorn.java.execution.controllers
 
 import com.techullurgy.codehorn.common.constants.EndpointConstants
-import com.techullurgy.codehorn.common.model.CodeSubmissionResult
-import com.techullurgy.codehorn.common.model.TestcaseResult
-import com.techullurgy.codehorn.common.requests.CodeExecutionRequest
-import com.techullurgy.codehorn.common.responses.CodeExecutionResultResponse
+import com.techullurgy.codehorn.common.web.requests.CodeExecutionRequest
+import com.techullurgy.codehorn.common.web.responses.CodeExecutionResultResponse
 import com.techullurgy.codehorn.domain.code.execution.services.CodeExecutionService
-import com.techullurgy.codehorn.domain.code.execution.services.CodeExecutionType
 import com.techullurgy.codehorn.domain.code.execution.services.UserFileCreator
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,23 +28,11 @@ class JavaExecutionController {
         val codeExecutionService = codeExecutionServiceProvider.getObject(request.submissionId)
 
         val results = UserFileCreator(request.submissionId, "java").use {
-            val outputs = codeExecutionService.executeFor(
+            codeExecutionService.executeFor(
                 folder = it.file,
                 fileContent = request.fileContent,
-                executionType = CodeExecutionType.CONTINUE_IF_FAILS,
-                testcases = request.sampleTestcases
-            ).toMutableList()
-
-            if(outputs.all { it.result == CodeSubmissionResult.Accepted } && request.hiddenTestcases.isNotEmpty()) {
-                outputs += codeExecutionService.executeFor(
-                    folder = it.file,
-                    fileContent = request.fileContent,
-                    executionType = CodeExecutionType.STOP_IF_FAILS,
-                    testcases = request.hiddenTestcases
-                )
-            }
-
-            outputs.toList()
+                testcases = request.testcases
+            )
         }
 
         val response = CodeExecutionResultResponse(

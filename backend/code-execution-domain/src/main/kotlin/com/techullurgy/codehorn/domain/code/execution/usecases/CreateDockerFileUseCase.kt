@@ -25,10 +25,10 @@ class CreateDockerFileUseCase(
             |FROM $compiler
             |ADD ./$fileName /tmp/${language.lowercase()}/$fileName
             |COPY ./testcases /tmp/${language.lowercase()}/testcases
-            |ENV testcase_no=0
+            |ADD ./entrypoint.sh /tmp/${language.lowercase()}/entrypoint.sh
             |WORKDIR /tmp/${language.lowercase()}/
-            |CMD mkdir outputs
-            ${executionParametersProvider.provide()}
+            |RUN chmod +x entrypoint.sh
+            |ENTRYPOINT ["./entrypoint.sh"]
         """.trimMargin()
 
         FileService.writeFile(filePath = "$inputFilePath/Dockerfile", value = dockerFileContent)

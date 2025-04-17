@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.common.dto
+package com.techullurgy.codehorn.common.web.dto
 
 data class FileContentDTO(
     val id: Int = 0,

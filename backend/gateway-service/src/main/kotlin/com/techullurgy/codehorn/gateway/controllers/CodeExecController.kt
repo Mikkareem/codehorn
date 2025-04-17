@@ -3,8 +3,8 @@ package com.techullurgy.codehorn.gateway.controllers
 import com.techullurgy.codehorn.common.constants.EndpointConstants
 import com.techullurgy.codehorn.common.constants.postRunCodeByUser
 import com.techullurgy.codehorn.common.constants.postSubmitCodeByUser
-import com.techullurgy.codehorn.common.requests.CodeRequest
-import com.techullurgy.codehorn.common.responses.RunResultResponse
+import com.techullurgy.codehorn.common.web.requests.CodeRequest
+import com.techullurgy.codehorn.common.web.responses.RunResultResponse
 import com.techullurgy.codehorn.gateway.utils.getCurrentAuthenticatedUser
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

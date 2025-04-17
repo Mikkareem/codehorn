@@ -1,8 +1,8 @@
 package com.techullurgy.codehorn.gateway.controllers
 
 import com.techullurgy.codehorn.common.constants.EndpointConstants
-import com.techullurgy.codehorn.common.responses.ProblemByIdForUserResponse
-import com.techullurgy.codehorn.common.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdForUserResponse
+import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
 import com.techullurgy.codehorn.gateway.services.ProblemsService
 import com.techullurgy.codehorn.gateway.utils.getCurrentAuthenticatedUser
 import org.springframework.http.ResponseEntity

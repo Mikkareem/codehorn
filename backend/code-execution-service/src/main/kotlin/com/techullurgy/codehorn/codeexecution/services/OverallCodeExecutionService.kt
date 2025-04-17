@@ -1,11 +1,13 @@
 package com.techullurgy.codehorn.codeexecution.services
 
 import com.techullurgy.codehorn.common.constants.*
-import com.techullurgy.codehorn.common.requests.CodeExecutionRequest
-import com.techullurgy.codehorn.common.requests.CodeRequest
-import com.techullurgy.codehorn.common.responses.CodeExecutionResultResponse
-import com.techullurgy.codehorn.common.responses.ProblemByIdResponse
-import com.techullurgy.codehorn.common.responses.RunResultResponse
+import com.techullurgy.codehorn.common.web.mappers.toTestcaseResultDTO
+import com.techullurgy.codehorn.common.web.requests.CodeExecutionRequest
+import com.techullurgy.codehorn.common.web.requests.CodeRequest
+import com.techullurgy.codehorn.common.web.responses.CodeExecutionResultResponse
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdResponse
+import com.techullurgy.codehorn.common.web.responses.RunResultResponse
+import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -15,6 +17,9 @@ import org.springframework.web.client.RestClient
 class OverallCodeExecutionService(
     private val restClient: RestClient
 ) {
+
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     fun runCode(
         userId: String,
         problemId: String,
@@ -50,9 +55,10 @@ class OverallCodeExecutionService(
         val requestBody = CodeExecutionRequest(
             submissionId = userId,
             fileContent = filledFileContent,
-            sampleTestcases = problem.testcases.filter { !it.isHidden },
-            hiddenTestcases = problem.testcases.filter { it.isHidden }
+            testcases = problem.testcases
         )
+
+        logger.debug("Code Execution Request Body: {}", requestBody)
 
         val endpointUri = when(body.language) {
             "c" -> EndpointConstants.Public.LanguageExecution.postCodeExecutionC()
@@ -70,9 +76,11 @@ class OverallCodeExecutionService(
             .retrieve()
             .toEntity(CodeExecutionResultResponse::class.java)
 
+        logger.debug("Code Execution Response: {}", codeExecutionResultResponse)
+
         val response = RunResultResponse(
             problemId = problemId,
-            results = codeExecutionResultResponse.body!!.testcaseResults
+            results = codeExecutionResultResponse.body!!.testcaseResults.map { it.toTestcaseResultDTO() }
         )
 
         return ResponseEntity.ok(response)

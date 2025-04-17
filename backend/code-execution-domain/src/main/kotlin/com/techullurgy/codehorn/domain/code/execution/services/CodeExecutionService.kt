@@ -13,41 +13,35 @@ import java.io.File
 class CodeExecutionService(
     private val submissionId: String
 ) {
-    @Autowired private lateinit var buildDockerImageUseCase: BuildDockerImageUseCase
+    @Autowired private lateinit var createEntryPointFileUseCase: CreateEntryPointFileUseCase
     @Autowired private lateinit var createDockerFileUseCase: CreateDockerFileUseCase
+    @Autowired private lateinit var buildDockerImageUseCase: BuildDockerImageUseCase
     @Autowired private lateinit var createNecessaryTestcaseFilesUseCase: CreateNecessaryTestcaseFilesUseCase
     @Autowired private lateinit var executeForResults: ExecuteForResultsUseCase
     @Autowired private lateinit var generateInputFileUseCase: GenerateInputFileUseCase
     @Autowired private lateinit var deleteDockerImageUseCase: DeleteDockerImageUseCase
-    @Autowired private lateinit var deleteDockerFileUseCase: DeleteDockerFileUseCase
     @Autowired private lateinit var generateTestcaseResultsUseCase: GenerateTestcaseResultsUseCase
 
     fun executeFor(
         folder: File,
         fileContent: String,
         testcases: List<ProblemTestcase>,
-        executionType: CodeExecutionType
     ): List<TestcaseResult> {
         generateInputFileUseCase(submissionId, fileContent)
 
         createNecessaryTestcaseFilesUseCase(submissionId, testcases)
 
-        createDockerFileUseCase(submissionId)
+        createEntryPointFileUseCase(submissionId, testcases)
 
-        return emptyList()
+        createDockerFileUseCase(submissionId)
 
         val isCreated = buildDockerImageUseCase(submissionId)
 
-        val results = if(isCreated) {
-            val results = executeForResults(submissionId, testcases, executionType).toList()
-            results //results.filter { it !is CodeExecutionResult.NotExecuted }
-        } else {
-            listOf(CodeExecutionResult.CompilationError(""))
+        val results = executeForResults(submissionId, testcases, isCreated)
+
+        if(isCreated) {
+            deleteDockerImageUseCase(submissionId)
         }
-
-        deleteDockerImageUseCase(submissionId)
-
-        deleteDockerFileUseCase(submissionId)
 
         return generateTestcaseResultsUseCase(folder, testcases, results)
     }

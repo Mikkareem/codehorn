@@ -3,8 +3,8 @@ package com.techullurgy.codehorn.gateway.services
 import com.techullurgy.codehorn.common.constants.EndpointConstants
 import com.techullurgy.codehorn.common.constants.getProblemByIdForUserUri
 import com.techullurgy.codehorn.common.constants.getSnippetForProblemForLanguageUri
-import com.techullurgy.codehorn.common.responses.ProblemByIdForUserResponse
-import com.techullurgy.codehorn.common.responses.SnippetForProblemForLanguageResponse
+import com.techullurgy.codehorn.common.web.responses.ProblemByIdForUserResponse
+import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient

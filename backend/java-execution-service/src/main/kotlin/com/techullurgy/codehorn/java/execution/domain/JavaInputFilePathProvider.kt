@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component
 
 @Component
 @Scope("prototype")
-class JavaInputFilePathProvider(private val userId: String): InputFilePathProvider {
-    override fun provide() = "temp/java/$userId"
+class JavaInputFilePathProvider(private val submissionId: String): InputFilePathProvider {
+    override fun provide() = "temp/java/$submissionId"
 }

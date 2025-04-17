@@ -1,8 +1,8 @@
-package com.techullurgy.codehorn.common.responses
+package com.techullurgy.codehorn.common.web.responses
 
 import com.techullurgy.codehorn.common.annotations.InternalNetworkModel
-import com.techullurgy.codehorn.common.dto.FileContentDTO
-import com.techullurgy.codehorn.common.dto.SnippetDTO
+import com.techullurgy.codehorn.common.web.dto.FileContentDTO
+import com.techullurgy.codehorn.common.web.dto.SnippetDTO
 import com.techullurgy.codehorn.common.model.Difficulty
 import com.techullurgy.codehorn.common.model.ProblemTestcase
 
