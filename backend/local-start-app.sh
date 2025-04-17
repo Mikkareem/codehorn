@@ -1,3 +1,5 @@
+cd backend || echo 'Already in backend folder'
+
 ./gradlew clean build -x test
 
 CONSUL_ENABLED=true
