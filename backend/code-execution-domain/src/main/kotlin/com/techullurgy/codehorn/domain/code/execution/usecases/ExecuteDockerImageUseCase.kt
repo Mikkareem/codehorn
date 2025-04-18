@@ -34,7 +34,7 @@ class ExecuteDockerImageUseCase(
             imageName
         )
         val process = builder.start()
-        val isNotAborted = process.waitFor(10, TimeUnit.SECONDS)
+        val isNotAborted = process.waitFor(2, TimeUnit.MINUTES)
 
         if (isNotAborted) {
             val outputs = process.getOutputs()

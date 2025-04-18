@@ -18,7 +18,7 @@ class GenerateTestcaseResultsUseCase {
             val currentTestcase = testcases.find { t ->  t.id == it.key }!!
 
             val compilationError = if(it.value == CodeSubmissionResult.CompilationError) {
-                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/compilation_error.log")
+                FileService.getContentFromFile("${userFolder.canonicalPath.removeSuffix("/")}/outputs/compilation_err.log")
             } else ""
 
             val expectedResult = if(it.value.isResultExists()) {

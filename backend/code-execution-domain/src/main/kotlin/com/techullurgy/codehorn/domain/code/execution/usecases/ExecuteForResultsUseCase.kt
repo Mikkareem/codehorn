@@ -33,6 +33,7 @@ class ExecuteForResultsUseCase(
             results.forEach {
                 results[it.key] = CodeSubmissionResult.CompilationError
             }
+            return results
         }
 
         val outputMap = outputs.associate { it.split("-")[0] to it.split("-")[1] }

@@ -1,0 +1,36 @@
+
+### Run code Request (Accepted) ###
+
+POST http://localhost:8080/problems/10/run
+Authorization: Bearer 12345678
+Content-Type: application/json
+
+{
+    "userCode": "class Solution {\npublic int addTwo(int a, int b) {\nreturn a+b;\n\n}\n}",
+    "language": "java",
+    "userTestcases": []
+}
+
+### Run code Request (Compilation Error) ###
+
+POST http://localhost:8080/problems/10/run
+Authorization: Bearer 12345678
+Content-Type: application/json
+
+{
+    "userCode": "class Solution {\npublic int addTwo(int a, int b) {\nwhile(true) {} \nreturn a+b;\n\n}\n}",
+    "language": "java",
+    "userTestcases": []
+}
+
+### Run code Request (Time Limit Exceeded) ###
+
+POST http://localhost:8080/problems/10/run
+Authorization: Bearer 12345678
+Content-Type: application/json
+
+{
+    "userCode": "class Solution {\npublic int addTwo(int a, int b) {\nif(a%2==0 || b%2==0){ while(true) {} }\nreturn a+b;\n\n}\n}",
+    "language": "java",
+    "userTestcases": []
+}
