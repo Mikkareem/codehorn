@@ -4,16 +4,10 @@ import com.techullurgy.codehorn.common.model.Difficulty
 import com.techullurgy.codehorn.common.model.TestcaseCollectionType
 import com.techullurgy.codehorn.common.model.TestcaseDataType
 import com.techullurgy.codehorn.common.model.TestcaseType
-import com.techullurgy.codehorn.problems.data.entities.FileContent
-import com.techullurgy.codehorn.problems.data.entities.Problem
-import com.techullurgy.codehorn.problems.data.entities.Snippet
-import com.techullurgy.codehorn.problems.data.entities.Testcase
-import com.techullurgy.codehorn.problems.data.entities.TestcaseFormat
-import com.techullurgy.codehorn.problems.data.entities.TestcaseInput
+import com.techullurgy.codehorn.problems.data.entities.*
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class ProblemsRunner(
@@ -70,6 +64,59 @@ private val snippets = listOf(
 )
 
 private val fileContents = listOf(
+    FileContent(
+        c = "",
+        cpp = "",
+        java = """
+            class OriginalSolution {
+                public int addTwo(int a, int b) {
+                    return a+b;
+                }
+            }
+        """.trimIndent(),
+        python = "",
+        javascript = "",
+        cMain = "",
+        cppMain = "",
+        javaMain = """
+            public class Main {
+              public static void main(String[] args) throws Exception {
+                String testcaseType = args[0].toLowerCase();
+                MainUtils.readFromFileAndSaveInMap("/tmp/java/testcases/"+testcaseType+"-input"+args[1]+".txt");
+                
+                // Your code starts here
+                int a = MainUtils.getInteger();
+                int b = MainUtils.getInteger();
+                
+                OriginalSolution osol = new OriginalSolution();
+                int eResult = osol.addTwo(a, b);
+                
+                Solution sol = new Solution();
+                int result = sol.addTwo(a, b);
+                // Your code ends here
+                
+                MainUtils.writeResults(String.valueOf(result), String.valueOf(eResult), args[1]);
+              }
+            }
+        """.trimIndent(),
+        pythonMain = "",
+        javascriptMain = ""
+    ),
+    FileContent(
+        c = "",
+        cpp = "",
+        java = "",
+        python = "",
+        javascript = "",
+        cMain = "",
+        cppMain = "",
+        javaMain = "",
+        pythonMain = "",
+        javascriptMain = ""
+    ),
+)
+
+private val oldFileContents = listOf(
     FileContent(
         c = """
                 #include<stdio.h>
@@ -170,9 +217,7 @@ private val fileContents = listOf(
                 
                 *****CODE*****
             """.trimIndent(),
-        creplaceStr = "*****CODE*****",
         cpp = "",
-        cppReplaceStr = "",
         java = """
                 import java.io.*;
                 import java.util.*;
@@ -250,9 +295,6 @@ private val fileContents = listOf(
                     Solution sol = new Solution();
                     int result = sol.addTwo(a, b);
                     
-                    System.out.println(result);
-                    System.out.println(eResult);
-                    
                     try (FileWriter writer = new FileWriter(resultFileName)) {
                         writer.write(String.valueOf(result));
                     } catch (IOException e) {
@@ -267,7 +309,6 @@ private val fileContents = listOf(
                   }
                 }
             """.trimIndent(),
-        javaReplaceStr = "*****CODE*****",
         python = """
                 from pathlib import Path
                 import sys
@@ -375,7 +416,6 @@ private val fileContents = listOf(
                 if(result != eResult):
                   sys.exit(168)
             """.trimIndent(),
-        pythonReplaceStr = "*****CODE*****",
         javascript = """
                 const fs = require('fs');
                 const readline = require('readline')
@@ -511,19 +551,23 @@ private val fileContents = listOf(
                 })()
 
             """.trimIndent(),
-        javascriptReplaceStr = "*****CODE*****"
+        cMain = "",
+        cppMain = "",
+        javaMain = "",
+        pythonMain = "",
+        javascriptMain = "",
     ),
     FileContent(
         c = "C FC",
-        creplaceStr = "*****CODE*****",
         cpp = "",
-        cppReplaceStr = "",
         java = "JAVA FC",
-        javaReplaceStr = "*****CODE*****",
         python = "PYTHON FC",
-        pythonReplaceStr = "*****CODE*****",
         javascript = "JAVASCRIPT FC",
-        javascriptReplaceStr = "*****CODE*****"
+        cMain = "",
+        cppMain = "",
+        javaMain = "",
+        pythonMain = "",
+        javascriptMain = "",
     )
 )
 

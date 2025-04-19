@@ -10,6 +10,7 @@ import com.techullurgy.codehorn.common.web.responses.ProblemByIdResponse
 import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
 import com.techullurgy.codehorn.problems.data.mappers.toProblemTestcase
 import com.techullurgy.codehorn.problems.data.mappers.toTestcaseDTO
+import com.techullurgy.codehorn.problems.data.repositories.CodeUtilsRepository
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ProblemsController(
-    private val problemsService: ProblemsService
+    private val problemsService: ProblemsService,
+    private val codeUtilsRepository: CodeUtilsRepository
 ) {
     @InternalRestApi
     @GetMapping(EndpointConstants.Internal.Problems.GET_PROBLEM_BY_ID_FOR_CODE_EXECUTION)
@@ -30,6 +32,7 @@ class ProblemsController(
 //        val problem = problemsService.getProblemById(problemId)
 
         val problem = problemsService.getAllProblems().first()
+        val codeUtils = codeUtilsRepository.findAll().first()
 
         val response = ProblemByIdResponse(
             id = problemId,
@@ -52,11 +55,20 @@ class ProblemsController(
                 java = problem.fileContent!!.java,
                 python = problem.fileContent!!.python,
                 javascript = problem.fileContent!!.javascript,
-                creplaceStr = problem.fileContent!!.creplaceStr,
-                cppReplaceStr = problem.fileContent!!.cppReplaceStr,
-                javaReplaceStr = problem.fileContent!!.javaReplaceStr,
-                pythonReplaceStr = problem.fileContent!!.pythonReplaceStr,
-                javascriptReplaceStr = problem.fileContent!!.javascriptReplaceStr,
+                cMain = problem.fileContent!!.cMain,
+                cppMain = problem.fileContent!!.cppMain,
+                javaMain = problem.fileContent!!.javaMain,
+                pythonMain = problem.fileContent!!.pythonMain,
+                javascriptMain = problem.fileContent!!.javascriptMain,
+                cUtils = problem.fileContent!!.cUtils ?: codeUtils.cUtils,
+                cppUtils = problem.fileContent!!.cppUtils ?: codeUtils.cppUtils,
+                javaUtils = problem.fileContent!!.javaUtils ?: codeUtils.javaUtils,
+                pythonUtils = problem.fileContent!!.pythonUtils ?: codeUtils.pythonUtils,
+                javascriptUtils = problem.fileContent!!.javascriptUtils ?: codeUtils.javascriptUtils,
+                cImports = problem.fileContent!!.cImports ?: codeUtils.cImports,
+                cppImports = problem.fileContent!!.cppImports ?: codeUtils.cppImports,
+                javaImports = problem.fileContent!!.javaImports ?: codeUtils.javaImports,
+                pythonImports = problem.fileContent!!.pythonImports ?: codeUtils.pythonImports
             ),
             testcases = problem.testcases.map { it.toProblemTestcase() }
         )

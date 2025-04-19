@@ -17,7 +17,6 @@ import org.springframework.web.client.RestClient
 class OverallCodeExecutionService(
     private val restClient: RestClient
 ) {
-
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun runCode(
@@ -32,7 +31,31 @@ class OverallCodeExecutionService(
 
         val problem = problemResponse.body!!
 
-        val languageFileContent = when(body.language) {
+        var filledFileContent = """
+            ${AppConstants.CODEHORN_IMPORTS_REPLACEMENT_STRING}
+            
+            ${AppConstants.CODEHORN_UTILS_REPLACEMENT_STRING}
+            
+            ${AppConstants.CODEHORN_ORIGINAL_REPLACEMENT_STRING}
+            
+            ${AppConstants.CODEHORN_CODE_REPLACEMENT_STRING}
+            
+            ${AppConstants.CODEHORN_MAIN_REPLACEMENT_STRING}
+            
+        """.trimIndent()
+
+        logger.debug("Filled file content: {}", filledFileContent)
+
+        val languageImports = when(body.language) {
+            "c" -> problem.fileContent.cImports
+            "cpp" -> problem.fileContent.cppImports
+            "java" -> problem.fileContent.javaImports
+            "python" -> problem.fileContent.pythonImports
+            "javascript" -> ""
+            else -> TODO()
+        }
+
+        val languageOriginalSolution = when(body.language) {
             "c" -> problem.fileContent.c
             "cpp" -> problem.fileContent.cpp
             "java" -> problem.fileContent.java
@@ -41,16 +64,34 @@ class OverallCodeExecutionService(
             else -> TODO()
         }
 
-        val languageReplaceStringInFileContent = when(body.language) {
-            "c" -> problem.fileContent.creplaceStr
-            "cpp" -> problem.fileContent.cppReplaceStr
-            "java" -> problem.fileContent.javaReplaceStr
-            "python" -> problem.fileContent.pythonReplaceStr
-            "javascript" -> problem.fileContent.javascriptReplaceStr
+        val languageUtils = when(body.language) {
+            "c" -> problem.fileContent.cUtils
+            "cpp" -> problem.fileContent.cppUtils
+            "java" -> problem.fileContent.javaUtils
+            "python" -> problem.fileContent.pythonUtils
+            "javascript" -> problem.fileContent.javascriptUtils
             else -> TODO()
         }
 
-        val filledFileContent = languageFileContent.replace(languageReplaceStringInFileContent, body.userCode)
+        val languageMain = when(body.language) {
+            "c" -> problem.fileContent.cMain
+            "cpp" -> problem.fileContent.cppMain
+            "java" -> problem.fileContent.javaMain
+            "python" -> problem.fileContent.pythonMain
+            "javascript" -> problem.fileContent.javascriptMain
+            else -> TODO()
+        }
+
+        filledFileContent = filledFileContent.replace(AppConstants.CODEHORN_IMPORTS_REPLACEMENT_STRING, languageImports)
+        logger.debug("Filled File Content after imports replacement: {}", filledFileContent)
+        filledFileContent = filledFileContent.replace(AppConstants.CODEHORN_UTILS_REPLACEMENT_STRING, languageUtils)
+        logger.debug("Filled File Content after imports replacement: {}", filledFileContent)
+        filledFileContent = filledFileContent.replace(AppConstants.CODEHORN_ORIGINAL_REPLACEMENT_STRING, languageOriginalSolution)
+        logger.debug("Filled File Content after imports replacement: {}", filledFileContent)
+        filledFileContent = filledFileContent.replace(AppConstants.CODEHORN_CODE_REPLACEMENT_STRING, body.userCode)
+        logger.debug("Filled File Content after imports replacement: {}", filledFileContent)
+        filledFileContent = filledFileContent.replace(AppConstants.CODEHORN_MAIN_REPLACEMENT_STRING, languageMain)
+        logger.debug("Filled File Content after imports replacement: {}", filledFileContent)
 
         val requestBody = CodeExecutionRequest(
             submissionId = userId,
