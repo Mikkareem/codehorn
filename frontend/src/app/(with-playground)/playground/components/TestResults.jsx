@@ -55,8 +55,8 @@ const TestResult = ({ testResult }) => {
 
             <h4 className="text-xl font-semibold">Inputs</h4>
             {testResult.testcase.inputs.map((input) => (
-                <div key={input.details.name}>
-                    <Label>{input.details.name}=</Label>
+                <div key={input.name}>
+                    <Label>{input.name}=</Label>
                     <div className="bg-secondary text-secondary-foreground rounded-lg px-4 py-2">
                         <p>{input.value}</p>
                     </div>
@@ -64,33 +64,33 @@ const TestResult = ({ testResult }) => {
             ))}
 
             {
-                testResult.stdout && (
+                testResult.details.stdout && (
                     <>
                         <h4 className="text-xl font-semibold">Standard Output</h4>
                         <div className="bg-secondary text-secondary-foreground rounded-lg px-4 py-2">
-                            <p>{testResult.stdout}</p>
+                            <p>{testResult.details.stdout}</p>
                         </div>
                     </>
                 )
             }
 
             {
-                testResult.yourResult && (
+                testResult.details.yourResult && (
                     <>
                         <h4 className="text-xl font-semibold">Output</h4>
                         <div className="bg-secondary text-secondary-foreground rounded-lg px-4 py-2">
-                            <p>{testResult.yourResult}</p>
+                            <p>{testResult.details.yourResult}</p>
                         </div>
                     </>
                 )
             }
 
             {
-                testResult.expectedResult && (
+                testResult.details.expectedResult && (
                     <>
                         <h4 className="text-xl font-semibold">Expected Output</h4>
                         <div className="bg-secondary text-secondary-foregrounde rounded-lg px-4 py-2">
-                            <p>{testResult.expectedResult}</p>
+                            <p>{testResult.details.expectedResult}</p>
                         </div>
                     </>
                 )

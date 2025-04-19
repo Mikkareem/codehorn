@@ -7,8 +7,6 @@ export const axiosInstance = axios.create({
 })
 
 const getUserToken = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const cookieStore = await cookies();
     const session = cookieStore.get("session")
 

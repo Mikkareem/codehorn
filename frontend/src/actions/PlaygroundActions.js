@@ -1,40 +1,23 @@
+import { axiosInstance } from "@/config/AxiosConfig"
 
 export const runCode = async (code, language, problemId, testcases) => {
     const body = {
-        problemId,
         language,
-        sampleTestcases: testcases,
+        userTestcases: testcases,
         userCode: code
     }
-    const response = await fetch(
-        `http://localhost:3000/api/problems/${problemId}/run`,
-        {
-            cache: 'no-cache',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        }
-    )
-    return await response.json()
+    const response = await axiosInstance.post(`/problems/${problemId}/run`, body)
+    return await response.data
 }
 
 export const submitCode = async (code, language, problemId, testcases) => {
     const body = {
-        problemId,
         language,
         sampleTestcases: testcases,
         userCode: code
     }
-    const response = await fetch(
-        `http://localhost:3000/api/problems/${problemId}/submit`,
-        {
-            cache: 'no-cache',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        }
-    )
-    return await response.json()
+    const response = await axiosInstance.post(`/problems/${problemId}/submit`, body)
+    return await response.data
 }
 
 export const fetchCodeSnippet = async (language, onSuccess) => {
