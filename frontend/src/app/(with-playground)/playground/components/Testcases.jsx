@@ -46,8 +46,8 @@ const Testcase = ({ testcase }) => {
         <div>
             <h4 className="text-xl font-semibold">Inputs</h4>
             {testcase.inputs.map((input) => (
-                <div key={input.details.name}>
-                    <Label>{input.details.name}=</Label>
+                <div key={input.name}>
+                    <Label>{input.name}=</Label>
                     <div className="rounded-lg px-4 py-2 bg-secondary text-secondary-foreground">
                         <p>{input.value}</p>
                     </div>

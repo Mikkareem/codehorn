@@ -13,11 +13,11 @@ const LanguageSelector = ({ className }) => {
                     <SelectValue placeholder='Select Language' />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value='C'>C</SelectItem>
-                    <SelectItem value='Cpp'>Cpp</SelectItem>
-                    <SelectItem value='Java'>Java</SelectItem>
-                    <SelectItem value='Python'>Python</SelectItem>
-                    <SelectItem value='Javascript'>Javascript</SelectItem>
+                    <SelectItem value='c'>C</SelectItem>
+                    <SelectItem value='cpp'>Cpp</SelectItem>
+                    <SelectItem value='java'>Java</SelectItem>
+                    <SelectItem value='python'>Python</SelectItem>
+                    <SelectItem value='javascript'>Javascript</SelectItem>
                 </SelectContent>
             </Select>
         </div>

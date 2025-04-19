@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { useMutation } from "@tanstack/react-query"
-import {notFound} from "next/navigation";
-import {usePlaygroundContext} from "@/contexts/playground";
-import {runCode, submitCode} from "@/actions/PlaygroundActions";
+import {notFound} from "next/navigation"
+import {usePlaygroundContext} from "@/contexts/playground"
+import {runCode, submitCode} from "@/actions/PlaygroundActions"
 
 export default function CodeButtons() {
     const { state: { code, language, problem }, dispatch } = usePlaygroundContext()

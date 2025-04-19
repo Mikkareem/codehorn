@@ -1,4 +1,11 @@
+'use server'
+
 import { axiosInstance } from "@/config/AxiosConfig"
+
+export const getProblemById = async (id) => {
+    const response = await axiosInstance.get(`/problems/${id}`)
+    return response.data
+}
 
 export const runCode = async (code, language, problemId, testcases) => {
     const body = {
@@ -7,7 +14,7 @@ export const runCode = async (code, language, problemId, testcases) => {
         userCode: code
     }
     const response = await axiosInstance.post(`/problems/${problemId}/run`, body)
-    return await response.data
+    return response.data
 }
 
 export const submitCode = async (code, language, problemId, testcases) => {
@@ -17,16 +24,15 @@ export const submitCode = async (code, language, problemId, testcases) => {
         userCode: code
     }
     const response = await axiosInstance.post(`/problems/${problemId}/submit`, body)
-    return await response.data
+    return response.data
 }
 
-export const fetchCodeSnippet = async (language, onSuccess) => {
-    const data = await (await fetch(`http://localhost:3000/api/problems/1/snippets?language=${language}`)).json()
-    onSuccess(data)
-    return data
+export const fetchCodeSnippet = async (problemId, language) => {
+    const response = await axiosInstance.get(`/problems/${problemId}/snippet?language=${language.toLowerCase()}`)
+    return response.data
 }
 
 export const getSubmission = async (submissionId, problemId) => {
-    const response = await fetch(`http://localhost:3000/api/problems/${problemId}/submissions/${submissionId}`, { cache: 'no-cache' })
-    return await response.json()
+    const response = await axiosInstance.get(`/problems/${problemId}/submissions/${submissionId}`)
+    return response.data
 }
