@@ -65,7 +65,11 @@ private val snippets = listOf(
 
 private val fileContents = listOf(
     FileContent(
-        c = "",
+        c = """
+            int originalAddTwo(int a, int b) {
+                return a+b;
+            }
+        """.trimIndent(),
         cpp = "",
         java = """
             class OriginalSolution {
@@ -76,7 +80,31 @@ private val fileContents = listOf(
         """.trimIndent(),
         python = "",
         javascript = "",
-        cMain = "",
+        cMain = """
+            int main(int argc, char *argv[]) {
+                char* testcaseType = argv[0];
+                char* tNo = argv[1];
+                char filePath[100];
+                sprintf(filePath, "/tmp/c/testcases/%s-input%s.txt", testcaseType, tNo);
+                __readFromFileAndSaveInMap__(filePath);
+                
+                // Your code here
+                
+                int a = __getInteger__();
+                int b = __getInteger__();
+                
+                int original = originalAddTwo(a, b);
+                int actual = addTwo(a, b);
+                
+                char eResult[20], result[20];
+                sprintf(eResult, "%d", original);
+                sprintf(result, "%d", actual);
+                
+                // Your code ends here
+                
+                __writeOutputs__(expected, result);
+            }
+        """.trimIndent(),
         cppMain = "",
         javaMain = """
             public class Main {
