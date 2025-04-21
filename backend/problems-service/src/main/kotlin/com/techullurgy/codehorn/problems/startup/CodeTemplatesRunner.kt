@@ -1,23 +1,23 @@
 package com.techullurgy.codehorn.problems.startup
 
-import com.techullurgy.codehorn.problems.data.entities.CodeUtils
-import com.techullurgy.codehorn.problems.data.repositories.CodeUtilsRepository
+import com.techullurgy.codehorn.problems.data.entities.CodeTemplates
+import com.techullurgy.codehorn.problems.data.repositories.CodeTemplatesRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
 @Component
-class CodeUtilsRunner(
-    private val codeUtilsRepository: CodeUtilsRepository
+class CodeTemplatesRunner(
+    private val codeTemplatesRepository: CodeTemplatesRepository
 ): CommandLineRunner {
 
     override fun run(vararg args: String?) {
-        codeUtils.forEach { codeUtilsRepository.save(it) }
+        codeTemplates.forEach { codeTemplatesRepository.save(it) }
     }
 }
 
 
-private val codeUtils = listOf(
-    CodeUtils(
+private val codeTemplates = listOf(
+    CodeTemplates(
         cUtils = """
             #define __SIZE__ 100
 
@@ -141,8 +141,58 @@ private val codeUtils = listOf(
                     fclose(eResultFile);
                 }
             }
+            
+            void __toLowercase__(char* str) {
+              for (int i = 0; str[i]; i++) {
+                  str[i] = tolower((unsigned char)str[i]);
+              }
+            }
         """.trimIndent(),
-        cppUtils = "",
+        cppUtils = """
+            class MainUtils {
+            public:
+                static std::map<int, std::string> input_map;
+                static int line_index;
+
+                static void readFromFileAndSaveInMap(const std::string& filename) {
+                    std::ifstream infile(filename);
+                    std::string line;
+                    while (std::getline(infile, line)) {
+                        input_map[line_index] = line;
+                        ++line_index;
+                    }
+                    line_index = 1;
+                    
+                    infile.close();
+                }
+
+                static std::string getString() {
+                    return input_map[line_index++];
+                }
+
+                static int getInteger() {
+                    return std::stoi(input_map[line_index++]);
+                }
+
+                static void writeOutputs(const std::string& eResult, const std::string& result, const std::string& tNo) {
+                    std::ofstream expected("outputs/eResult"+tNo+".txt");
+                    expected << eResult;
+                    expected.close();
+
+                    std::ofstream actual("outputs/result"+tNo+".txt");
+                    actual << result;
+                    actual.close();
+                }
+            };
+
+            std::map<int, std::string> MainUtils::input_map;
+            int MainUtils::line_index = 1;
+
+            std::string toLowerCase(std::string str) {
+                std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+                return str;
+            }
+        """.trimIndent(),
         javaUtils = """
             class MainUtils {
               private static Map<Integer, String> map = new HashMap();
@@ -207,12 +257,93 @@ private val codeUtils = listOf(
               }
             }
         """.trimIndent(),
-        pythonUtils = "",
-        javascriptUtils = "",
+        pythonUtils = """
+            class MainUtils:
+              input_map = dict()
+              line_index = 1
+
+              @staticmethod
+              def readFromFileAndSaveInDictionary(filename):
+                with open(filename, "r") as file:
+                  line = file.readline()
+                  while line:
+                    MainUtils.input_map[MainUtils.line_index] = line.strip()
+                    MainUtils.line_index += 1
+                    line = file.readline()
+                MainUtils.line_index = 1
+                
+              @staticmethod
+              def getString():
+                ans = MainUtils.input_map[MainUtils.line_index]
+                MainUtils.line_index += 1
+                return ans
+
+              @staticmethod
+              def getInteger():
+                ans = int(MainUtils.input_map[MainUtils.line_index])
+                MainUtils.line_index += 1
+                return ans
+              
+              @staticmethod
+              def writeOutputs(eResult, result, tNo):
+                expected_result_filename = "outputs/eResult"+tNo+".txt"
+                result_filename = "outputs/result"+tNo+".txt"
+
+                with open(expected_result_filename, "w") as file:
+                  file.write(eResult)
+
+                with open(result_filename, "w") as file:
+                  file.write(result)
+        """.trimIndent(),
+        javascriptUtils = """
+            class MainUtils {
+              static inputMap = {};
+              static lineIndex = 1;
+
+              static async readFromFileAndSaveInMap(fileName) {
+                  const fileStream = fs.createReadStream(fileName)
+                  const rl = readline.createInterface({
+                    input: fileStream,
+                    crlfDelay: Infinity
+                  })
+                
+                  return new Promise(res => {
+                    rl.on('line', line => { MainUtils.inputMap[MainUtils.lineIndex++] = line })
+                    rl.on('close', _ => {
+                        MainUtils.lineIndex = 1
+                        res() 
+                    })
+                  })
+              }
+
+              static getString() {
+                const ans = MainUtils.inputMap[MainUtils.lineIndex];
+                MainUtils.lineIndex++;
+                return ans;
+              }
+
+              static getInteger() {
+                const ans = parseInt(MainUtils.inputMap[MainUtils.lineIndex]);
+                MainUtils.lineIndex++;
+                return ans;
+              }
+
+              static writeOutputs(expectedResult, result, tNo) {
+                const expectedPath = path.join("outputs", "eResult"+tNo+".txt");
+                const resultPath = path.join("outputs", "result"+tNo+".txt");
+
+                fs.writeFileSync(expectedPath, expectedResult);
+                fs.writeFileSync(resultPath, result);
+              }
+            }
+        """.trimIndent(),
         cMain = """
             int main(int argc, char *argv[]) {
-                char* testcaseType = argv[0];
-                char* tNo = argv[1];
+                char* testcaseType = argv[1];
+                char* tNo = argv[2];
+                
+                __toLowercase__(testcaseType);
+                
                 char filePath[100];
                 sprintf(filePath, "/tmp/c/testcases/%s-input%s.txt", testcaseType, tNo);
                 __readFromFileAndSaveInMap__(filePath);
@@ -221,10 +352,26 @@ private val codeUtils = listOf(
                 
                 // Your code ends here
                 
-                __writeOutputs__(expected, result);
+                __writeOutputs__(eResult, result, tNo);
             }
         """.trimIndent(),
-        cppMain = "",
+        cppMain = """
+            int main(int argc, char* argv[]) {
+                std::string testcaseType = toLowerCase(argv[1]);
+                std::string tNo = argv[2];
+
+                std::string inputFile = "/tmp/cpp/testcases/" + testcaseType + "-input" + tNo + ".txt";
+                MainUtils::readFromFileAndSaveInMap(inputFile);
+
+                // Your code starts here
+
+                // Your code ends here
+
+                MainUtils::writeOutputs("", "", tNo);
+
+                return 0;
+            }
+        """.trimIndent(),
         javaMain = """
             public class Main {
               public static void main(String[] args) throws Exception {
@@ -239,19 +386,60 @@ private val codeUtils = listOf(
               }
             }
         """.trimIndent(),
-        pythonMain = "",
-        javascriptMain = "",
+        pythonMain = """
+            def main():
+              testcaseType = sys.argv[1].lower()
+              tNo = sys.argv[2]
+              MainUtils.readFromFileAndSaveInDictionary("/tmp/python/testcases/"+testcaseType+"-input"+tNo+".txt")
+            
+              # Your code starts here
+              # Your code ends here
+            
+              MainUtils.writeOutputs("", "", tNo)
+            
+            if __name__ == "__main__":
+              main()
+        """.trimIndent(),
+        javascriptMain = $$"""
+            (async () => {
+              const args = process.argv.slice(2)
+            
+              const testcaseType = args[0].toLowerCase()
+              const tNo = args[1]
+            
+              const testcasePath = `/tmp/javascript/testcases/${testcaseType}-input${tNo}.txt`
+              await MainUtils.readFromFileAndSaveInMap(testcasePath)
+              
+              // Your code starts here
+              // Your code ends here
+              
+              MainUtils.writeOutputs("", "", tNo);
+            })()
+        """.trimIndent(),
         cImports = """
             #include <stdio.h>
             #include <stdlib.h>
             #include <string.h>
         """.trimIndent(),
-        cppImports = "",
+        cppImports = """
+            #include <iostream>
+            #include <fstream>
+            #include <map>
+            #include <string>
+            #include <cctype>
+            #include <algorithm>
+        """.trimIndent(),
         javaImports = """
             import java.io.*;
             import java.util.*;
         """.trimIndent(),
-        pythonImports = "",
-        javascriptImports = "",
+        pythonImports = """
+            import sys
+        """.trimIndent(),
+        javascriptImports = """
+            const fs = require('fs');
+            const path = require('path');
+            const readline = require('readline')
+        """.trimIndent(),
     )
 )

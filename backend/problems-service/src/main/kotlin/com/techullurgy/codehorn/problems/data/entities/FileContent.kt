@@ -50,6 +50,8 @@ data class FileContent(
     val javaImports: String? = null,
     @Column(nullable = true)
     val pythonImports: String? = null,
+    @Column(nullable = true)
+    val javascriptImports: String? = null,
 
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -57,6 +59,6 @@ data class FileContent(
     val problem: Problem? = null
 ) {
     override fun toString(): String {
-        return "FileContent(pythonImports=$pythonImports, javaImports=$javaImports, cppImports=$cppImports, cImports=$cImports, javascriptUtils=$javascriptUtils, pythonUtils=$pythonUtils, javaUtils=$javaUtils, cppUtils=$cppUtils, cUtils=$cUtils, javascriptMain='$javascriptMain', pythonMain='$pythonMain', javaMain='$javaMain', cppMain='$cppMain', cMain='$cMain', javascript='$javascript', python='$python', java='$java', cpp='$cpp', c='$c', id=$id)"
+        return "FileContent(javascriptImports=$javascriptImports, pythonImports=$pythonImports, javaImports=$javaImports, cppImports=$cppImports, cImports=$cImports, javascriptUtils=$javascriptUtils, pythonUtils=$pythonUtils, javaUtils=$javaUtils, cppUtils=$cppUtils, cUtils=$cUtils, javascriptMain='$javascriptMain', pythonMain='$pythonMain', javaMain='$javaMain', cppMain='$cppMain', cMain='$cMain', javascript='$javascript', python='$python', java='$java', cpp='$cpp', c='$c', id=$id)"
     }
 }

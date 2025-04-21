@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.cpp.execution.controllers
+package com.techullurgy.codehorn.python.execution.controllers
 
 import com.techullurgy.codehorn.common.constants.EndpointConstants
 import com.techullurgy.codehorn.common.web.requests.CodeExecutionRequest
@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(EndpointConstants.Public.LanguageExecution.POST_CODE_EXECUTION_CPP)
-class CppExecutionController {
+@RequestMapping(EndpointConstants.Public.LanguageExecution.POST_CODE_EXECUTION_PYTHON)
+class PythonExecutionController {
 
     @Autowired
     private lateinit var codeExecutionServiceProvider: ObjectProvider<CodeExecutionService>
 
     @PostMapping
-    fun executeCppCode(
+    fun executePythonCode(
         @RequestBody request: CodeExecutionRequest
     ): ResponseEntity<CodeExecutionResultResponse> {
 
         val codeExecutionService = codeExecutionServiceProvider.getObject(request.submissionId)
 
-        val results = UserFileCreator(request.submissionId, "cpp").use {
+        val results = UserFileCreator(request.submissionId, "python").use {
             codeExecutionService.executeFor(
                 folder = it.file,
                 fileContent = request.fileContent,

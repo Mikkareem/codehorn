@@ -23,4 +23,5 @@ data class FileContentDTO(
     val cppImports: String,
     val javaImports: String,
     val pythonImports: String,
+    val javascriptImports: String,
 )

@@ -20,7 +20,7 @@ interface EntryPointProvider: Provider {
                     |  exit 1;
                     |}
                 """.trimMargin()
-            }}
+            } ?: ""}
 
             |(
             |  set +e

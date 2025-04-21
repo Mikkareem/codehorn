@@ -7,10 +7,6 @@ object Compiler {
     const val FROM_DOCKER_IMAGE_FOR_CPP_COMPILER = "gcc:9.5.0"
     const val FROM_DOCKER_IMAGE_FOR_PYTHON3_COMPILER = "gcc:9.5.0"
 
-    const val TIME_LIMIT_EXCEEDED_PROCESS_EXIT_CODE = 172
-    const val WRONG_ANSWER_PROCESS_EXIT_CODE = 168
-    const val ACCEPTED_PROCESS_EXIT_CODE = 0
-
     const val C_INPUT_FILE_NAME = "Main.c"
     const val CPP_INPUT_FILE_NAME = "Main.cpp"
     const val JAVA_INPUT_FILE_NAME = "Main.java"
@@ -18,6 +14,4 @@ object Compiler {
     const val JAVASCRIPT_INPUT_FILE_NAME = "Main.js"
 
     const val BASE_IMAGE_PREFIX = "code-image"
-
-    val CURRENT_WORKING_DIRECTORY_OF_HOST = System.getProperty("user.dir")
 }

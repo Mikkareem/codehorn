@@ -10,7 +10,7 @@ import com.techullurgy.codehorn.common.web.responses.ProblemByIdResponse
 import com.techullurgy.codehorn.common.web.responses.SnippetForProblemForLanguageResponse
 import com.techullurgy.codehorn.problems.data.mappers.toProblemTestcase
 import com.techullurgy.codehorn.problems.data.mappers.toTestcaseDTO
-import com.techullurgy.codehorn.problems.data.repositories.CodeUtilsRepository
+import com.techullurgy.codehorn.problems.data.repositories.CodeTemplatesRepository
 import com.techullurgy.codehorn.problems.services.ProblemsService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ProblemsController(
     private val problemsService: ProblemsService,
-    private val codeUtilsRepository: CodeUtilsRepository
+    private val codeTemplatesRepository: CodeTemplatesRepository
 ) {
     @InternalRestApi
     @GetMapping(EndpointConstants.Internal.Problems.GET_PROBLEM_BY_ID_FOR_CODE_EXECUTION)
@@ -32,7 +32,7 @@ class ProblemsController(
 //        val problem = problemsService.getProblemById(problemId)
 
         val problem = problemsService.getAllProblems().first()
-        val codeUtils = codeUtilsRepository.findAll().first()
+        val codeUtils = codeTemplatesRepository.findAll().first()
 
         val response = ProblemByIdResponse(
             id = problemId,
@@ -68,7 +68,8 @@ class ProblemsController(
                 cImports = problem.fileContent!!.cImports ?: codeUtils.cImports,
                 cppImports = problem.fileContent!!.cppImports ?: codeUtils.cppImports,
                 javaImports = problem.fileContent!!.javaImports ?: codeUtils.javaImports,
-                pythonImports = problem.fileContent!!.pythonImports ?: codeUtils.pythonImports
+                pythonImports = problem.fileContent!!.pythonImports ?: codeUtils.pythonImports,
+                javascriptImports = problem.fileContent!!.javascriptImports ?: codeUtils.javascriptImports
             ),
             testcases = problem.testcases.map { it.toProblemTestcase() }
         )

@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 
 @Entity
-data class CodeUtils(
+data class CodeTemplates(
     @Id
     @GeneratedValue
     val id: Int = 0,

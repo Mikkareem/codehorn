@@ -1,4 +1,4 @@
-package com.techullurgy.codehorn.cpp.execution.domain
+package com.techullurgy.codehorn.javascript.execution.domain
 
 import com.techullurgy.codehorn.common.model.ProblemTestcase
 import com.techullurgy.codehorn.domain.code.execution.services.Compiler
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Scope("prototype")
-class CppEntryPointProvider(
+class JavascriptEntryPointProvider(
     private val testcases: List<ProblemTestcase>
 ): EntryPointProvider {
 
@@ -16,7 +16,7 @@ class CppEntryPointProvider(
 
     override fun getHiddenIds(): List<String> = testcases.filter { it.isHidden }.map { it.id }
 
-    override fun getRunCommand(): String = "./runner"
+    override fun getRunCommand(): String = "node ${Compiler.JAVASCRIPT_INPUT_FILE_NAME}"
 
-    override fun getCompilationCommand(): String? = "gcc -w -o runner -lstdc++ ${Compiler.CPP_INPUT_FILE_NAME}"
+    override fun getCompilationCommand(): String? = null
 }

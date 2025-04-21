@@ -51,7 +51,7 @@ class OverallCodeExecutionService(
             "cpp" -> problem.fileContent.cppImports
             "java" -> problem.fileContent.javaImports
             "python" -> problem.fileContent.pythonImports
-            "javascript" -> ""
+            "javascript" -> problem.fileContent.javascriptImports
             else -> TODO()
         }
 

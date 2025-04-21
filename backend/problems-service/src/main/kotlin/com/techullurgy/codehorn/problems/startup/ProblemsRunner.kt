@@ -70,7 +70,11 @@ private val fileContents = listOf(
                 return a+b;
             }
         """.trimIndent(),
-        cpp = "",
+        cpp = """
+            int originalAddTwo(int a, int b) {
+                return a+b;
+            }
+        """.trimIndent(),
         java = """
             class OriginalSolution {
                 public int addTwo(int a, int b) {
@@ -78,12 +82,20 @@ private val fileContents = listOf(
                 }
             }
         """.trimIndent(),
-        python = "",
-        javascript = "",
+        python = """
+            def originalAddTwo(a, b):
+              return a+b
+        """.trimIndent(),
+        javascript = """
+            function originalAddTwo(a, b) {
+                return a+b;            
+            }
+        """.trimIndent(),
         cMain = """
             int main(int argc, char *argv[]) {
-                char* testcaseType = argv[0];
-                char* tNo = argv[1];
+                char* testcaseType = argv[1];
+                char* tNo = argv[2];
+                __toLowercase__(testcaseType);
                 char filePath[100];
                 sprintf(filePath, "/tmp/c/testcases/%s-input%s.txt", testcaseType, tNo);
                 __readFromFileAndSaveInMap__(filePath);
@@ -102,10 +114,31 @@ private val fileContents = listOf(
                 
                 // Your code ends here
                 
-                __writeOutputs__(expected, result);
+                __writeOutputs__(eResult, result, tNo);
             }
         """.trimIndent(),
-        cppMain = "",
+        cppMain = """
+            int main(int argc, char* argv[]) {
+                std::string testcaseType = toLowerCase(argv[1]);
+                std::string tNo = argv[2];
+
+                std::string inputFile = "/tmp/cpp/testcases/" + testcaseType + "-input" + tNo + ".txt";
+                MainUtils::readFromFileAndSaveInMap(inputFile);
+
+                // Your code starts here
+                int a = MainUtils::getInteger();
+                int b = MainUtils::getInteger();
+                
+                int eResult = originalAddTwo(a, b);
+                int result = addTwo(a, b);
+
+                // Your code ends here
+
+                MainUtils::writeOutputs(std::to_string(eResult), std::to_string(result), tNo);
+
+                return 0;
+            }
+        """.trimIndent(),
         javaMain = """
             public class Main {
               public static void main(String[] args) throws Exception {
@@ -127,8 +160,48 @@ private val fileContents = listOf(
               }
             }
         """.trimIndent(),
-        pythonMain = "",
-        javascriptMain = ""
+        pythonMain = """
+            def main():
+              testcaseType = sys.argv[1].lower()
+              tNo = sys.argv[2]
+              MainUtils.readFromFileAndSaveInDictionary("/tmp/python/testcases/"+testcaseType+"-input"+tNo+".txt")
+            
+              # Your code starts here
+              a = MainUtils.getInteger()
+              b = MainUtils.getInteger()
+              
+              eResult = originalAddTwo(a,b)
+              result = addTwo(a, b)
+              # Your code ends here
+            
+              MainUtils.writeOutputs(str(eResult), str(result), tNo)
+            
+            if __name__ == "__main__":
+              main()
+        """.trimIndent(),
+        javascriptMain = $$"""
+            (async () => {
+              const args = process.argv.slice(2)
+            
+              const testcaseType = args[0].toLowerCase()
+              const tNo = args[1]
+            
+              const testcasePath = `/tmp/javascript/testcases/${testcaseType}-input${tNo}.txt`
+              await MainUtils.readFromFileAndSaveInMap(testcasePath)
+              
+              // Your code starts here
+              
+              const a = MainUtils.getInteger()
+              const b = MainUtils.getInteger()
+              
+              const eResult = originalAddTwo(a,b)
+              const result = addTwo(a,b)
+              
+              // Your code ends here
+              
+              MainUtils.writeOutputs(eResult.toString(), result.toString(), tNo);
+            })()
+        """.trimIndent()
     ),
     FileContent(
         c = "",

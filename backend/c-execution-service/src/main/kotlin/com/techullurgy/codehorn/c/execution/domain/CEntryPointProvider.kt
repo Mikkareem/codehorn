@@ -16,7 +16,7 @@ class CEntryPointProvider(
 
     override fun getHiddenIds(): List<String> = testcases.filter { it.isHidden }.map { it.id }
 
-    override fun getRunCommand(): String = "./main.out"
+    override fun getRunCommand(): String = "./runner"
 
-    override fun getCompilationCommand(): String? = "gcc -w -o main ${Compiler.C_INPUT_FILE_NAME}"
+    override fun getCompilationCommand(): String? = "gcc -w -o runner ${Compiler.C_INPUT_FILE_NAME}"
 }
