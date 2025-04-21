@@ -24,12 +24,15 @@
     workspace = {
       # Runs when a workspace is (re)started
       onStart = {
+        docker-pull-images = ''
+          echo 'Pulling Necessary images'
+          docker pull amazoncorretto:21
+          docker pull node:21
+          docker pull gcc:9.5.0
+          echo 'Pulling Necessary images done'
+        '';
         run-init-script = ''
           echo 'Start'
-          
-          echo 'Pulling Neccessary images'
-          docker pull amazoncorretto:21
-          echo 'Pulling Neccessary images done'
 
           cat <<EOF > ./backend/gradle/wrapper/gradle-wrapper.properties
           distributionBase=GRADLE_USER_HOME
