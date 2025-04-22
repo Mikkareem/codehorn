@@ -54,7 +54,7 @@ const TestResult = ({ testResult }) => {
             </div>
 
             <h4 className="text-xl font-semibold">Inputs</h4>
-            {testResult.testcase.inputs.map((input) => (
+            {testResult.inputs.map((input) => (
                 <div key={input.name}>
                     <Label>{input.name}=</Label>
                     <div className="bg-secondary text-secondary-foreground rounded-lg px-4 py-2">
@@ -62,6 +62,17 @@ const TestResult = ({ testResult }) => {
                     </div>
                 </div>
             ))}
+
+            {
+                testResult.details.stderr && (
+                    <>
+                        <h4 className="text-xl font-semibold">Error</h4>
+                        <div className="bg-red-400 text-red-700 rounded-lg px-4 py-2">
+                            <p>{testResult.details.stderr}</p>
+                        </div>
+                    </>
+                )
+            }
 
             {
                 testResult.details.stdout && (

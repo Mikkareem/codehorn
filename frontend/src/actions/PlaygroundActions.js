@@ -20,7 +20,7 @@ export const runCode = async (code, language, problemId, testcases) => {
 export const submitCode = async (code, language, problemId, testcases) => {
     const body = {
         language,
-        sampleTestcases: testcases,
+        userTestcases: testcases,
         userCode: code
     }
     const response = await axiosInstance.post(`/problems/${problemId}/submit`, body)
