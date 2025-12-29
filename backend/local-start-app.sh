@@ -2,7 +2,7 @@ cd backend || echo 'Already in backend folder'
 
 ./gradlew clean build -x test
 
-CONSUL_ENABLED=true
+CONSUL_ENABLED=false
 APP_VERSION=1.0.0
 
 set -e

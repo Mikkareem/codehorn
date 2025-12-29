@@ -10,7 +10,7 @@ class CodeTemplatesRunner(
     private val codeTemplatesRepository: CodeTemplatesRepository
 ): CommandLineRunner {
 
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         codeTemplates.forEach { codeTemplatesRepository.save(it) }
     }
 }

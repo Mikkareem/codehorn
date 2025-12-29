@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.withType
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
@@ -11,12 +10,14 @@ plugins {
 dependencies {
     api(project(":common"))
 
-    api("org.springframework.boot:spring-boot-starter-web")
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api("org.springframework.boot:spring-boot-starter-webmvc")
+    api("org.springframework.boot:spring-boot-starter-restclient")
     api("org.jetbrains.kotlin:kotlin-reflect")
+    api("tools.jackson.module:jackson-module-kotlin")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
 
-    api(platform("org.springframework.cloud:spring-cloud-dependencies:2024.0.0"))
-    api("org.springframework.cloud:spring-cloud-starter-consul-discovery")
+    api(platform("org.springframework.cloud:spring-cloud-dependencies:2025.1.0"))
 }
 
 

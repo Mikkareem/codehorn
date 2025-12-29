@@ -19,16 +19,16 @@ class TestController {
     @GetMapping("/hello")
     fun hello(): ResponseEntity<String> {
         val authentication = SecurityContextHolder.getContext().authentication
-        val user = authentication.name
+        val user = authentication?.name
         return ResponseEntity.ok("Hello World $user")
     }
 
     @GetMapping("/roles")
     fun roles(): ResponseEntity<RoleResp> {
 
-        val authorities = SecurityContextHolder.getContext().authentication.authorities.toList()
+        val authorities = SecurityContextHolder.getContext().authentication?.authorities?.toList()
 
-        val response = RoleResp(authorities.map { it.toString() })
+        val response = RoleResp(authorities?.map { it.toString() } ?: emptyList())
 
         println(response)
 

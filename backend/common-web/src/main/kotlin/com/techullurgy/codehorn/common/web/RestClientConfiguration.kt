@@ -1,21 +1,17 @@
 package com.techullurgy.codehorn.common.web
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.techullurgy.codehorn.common.web.exceptions.CodehornRestClientException
-import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatusCode
 import org.springframework.web.client.RestClient
+import tools.jackson.databind.json.JsonMapper
 
 @Configuration
 class RestClientConfiguration {
 
     @Bean
-    @LoadBalanced
+//    @LoadBalanced
     fun provideRestClientBuilder(): RestClient.Builder {
         return RestClient.builder()
     }
@@ -31,10 +27,10 @@ class RestClientConfiguration {
     }
 
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper().apply {
-            registerKotlinModule()
-            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // Ignore unknown fields
+    fun objectMapper(): JsonMapper {
+        return JsonMapper().apply {
+//            registerKotlinModule()
+//            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // Ignore unknown fields
         }
     }
 }

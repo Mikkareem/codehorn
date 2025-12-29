@@ -14,7 +14,7 @@ class ProblemsRunner(
     private val problemsService: ProblemsService
 ): CommandLineRunner {
 
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         problems.forEachIndexed { index, p ->
             problemsService.saveProblem(p)?.let { sp ->
                 testcases[index].forEach {

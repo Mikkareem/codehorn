@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component
 @Component
 class DefaultAuthEntryPoint: AuthenticationEntryPoint {
     override fun commence(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        authException: AuthenticationException?
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authException: AuthenticationException
     ) {
-        response?.contentType = "application/json"
-        response?.status = HttpServletResponse.SC_UNAUTHORIZED
-        response?.writer?.write("""{ "status": "Unauthorized", "error": "Invalid Credentials" }""")
+        response.contentType = "application/json"
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        response.writer?.write("""{ "status": "Unauthorized", "error": "Invalid Credentials" }""")
     }
 }

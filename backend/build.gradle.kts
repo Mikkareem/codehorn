@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm") version "2.1.0"
-    kotlin("plugin.spring") version "2.1.0"
-    id("org.springframework.boot") version "3.4.2"
+    kotlin("jvm") version "2.3.0"
+    kotlin("plugin.spring") version "2.3.0"
+    id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "2.1.0"
+    kotlin("plugin.jpa") version "2.3.0"
 }
 
 group = "com.techullurgy.codehorn"
@@ -23,14 +23,14 @@ subprojects {
 
     // Configure Java toolchain
     extensions.configure<JavaPluginExtension> {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     // Configure Kotlin compiler options
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         compilerOptions {
-            freeCompilerArgs.set(listOf("-Xjsr305=strict", "-Xmulti-dollar-interpolation"))
-            jvmTarget.set(JvmTarget.JVM_17)
+            freeCompilerArgs.set(listOf("-Xjsr305=strict", "-Xannotation-default-target=param-property"))
+            jvmTarget.set(JvmTarget.JVM_25)
         }
     }
 
@@ -42,7 +42,6 @@ subprojects {
         dependencies {
             implementation(project(":common-web"))
 
-            testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
             testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         }

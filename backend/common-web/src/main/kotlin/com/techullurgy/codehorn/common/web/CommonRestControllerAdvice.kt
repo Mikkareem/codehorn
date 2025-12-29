@@ -1,11 +1,11 @@
 package com.techullurgy.codehorn.common.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.techullurgy.codehorn.common.web.exceptions.CodehornRestClientException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import tools.jackson.databind.json.JsonMapper
 
 data class FailureResponse(
     val message: String
@@ -13,7 +13,7 @@ data class FailureResponse(
 
 @RestControllerAdvice
 class CommonRestControllerAdvice(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: JsonMapper
 ) {
 
     @ExceptionHandler(CodehornRestClientException::class)
